@@ -18,9 +18,11 @@ public class UploadFileServiceImp implements UploadFileService {
     private static final Logger logger = LoggerFactory.getLogger(UploadFileServiceImp.class);
 
     @Override
-    public ReturnValue uploadFile(MultipartFile zipFile) {
-        String targetFilePath = "D:\\test\\uploadTest";
-        String fileName = UUID.randomUUID().toString().replace("-", "");
+    public String uploadFile(MultipartFile zipFile) {
+        String targetFilePath = "/app/file/";
+//        String fileName = UUID.randomUUID().toString().replace("-", "");
+        String fileName = zipFile.getOriginalFilename();
+        logger.info("fileName:"+fileName);
         File targetFile = new File(targetFilePath + File.separator + fileName);
 
         FileOutputStream fileOutputStream = null;
@@ -30,8 +32,8 @@ public class UploadFileServiceImp implements UploadFileService {
             logger.info("------>>>>>>uploaded a file successfully!<<<<<<------");
         } catch (IOException e) {
             logger.info("------>>>>>>uploaded a file IOException!<<<<<<------"+e.toString());
-
-            return new ReturnValue<>(-1, null);
+//            return new ReturnValue<>(-1, null);
+            return "upload fail";
         } finally {
             try {
                 fileOutputStream.close();
@@ -39,6 +41,7 @@ public class UploadFileServiceImp implements UploadFileService {
                 logger.error("", e);
             }
         }
-        return new ReturnValue<>(ReturnCodeAndMsgEnum.Success, null);
+//        return new ReturnValue<>(ReturnCodeAndMsgEnum.Success, null);
+        return "upload success!";
     }
 }
