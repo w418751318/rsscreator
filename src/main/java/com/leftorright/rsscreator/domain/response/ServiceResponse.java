@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 public class ServiceResponse<DATA,ATTACH> {
     private static Logger logger =  LoggerFactory.getLogger(ServiceResponse.class);
 
-
     @ApiModelProperty(name = "status", value = "服务请求结果编码", required = true, example = "0000")
     @JsonProperty("status")
     private String status;
@@ -32,9 +31,6 @@ public class ServiceResponse<DATA,ATTACH> {
     @JsonProperty("permissions")
     private String[] permissions;
 
-    @ApiModelProperty(name = "data", value = "服务返回业务数据", required = true)
-    @JsonProperty("data")
-    private RspData<DATA,ATTACH> rspData;
 
     public String getUid() {
         return uid;
@@ -58,21 +54,6 @@ public class ServiceResponse<DATA,ATTACH> {
     public void setPermissions(String[] permissions) {
         this.permissions = permissions;
     }
-
-
-    /**
-     * 服务其他错误返回结果
-     * @param errorStatus
-     * @param errorMsg
-     * @param rspData
-     * @return
-     */
-    public ServiceResponse getErrorResponse(String errorStatus, String errorMsg, RspData<DATA, ATTACH> rspData){
-        this.setStatus(errorStatus);
-        this.setMsg(errorMsg);
-        this.setRspData(rspData);
-        return this;
-    }
     
     public String getStatus() {
         return status;
@@ -90,12 +71,4 @@ public class ServiceResponse<DATA,ATTACH> {
         this.msg = msg;
     }
 
-
-    public RspData<DATA, ATTACH> getRspData() {
-        return rspData;
-    }
-
-    public void setRspData(RspData<DATA, ATTACH> rspData) {
-        this.rspData = rspData;
-    }
 }

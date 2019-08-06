@@ -1,7 +1,6 @@
 package com.leftorright.rsscreator.service;
 
-import com.leftorright.rsscreator.utils.ReturnCodeAndMsgEnum;
-import com.leftorright.rsscreator.utils.ReturnValue;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.UUID;
+
 @Service
 public class UploadFileServiceImp implements UploadFileService {
 
@@ -33,15 +32,16 @@ public class UploadFileServiceImp implements UploadFileService {
         } catch (IOException e) {
             logger.info("------>>>>>>uploaded a file IOException!<<<<<<------"+e.toString());
 //            return new ReturnValue<>(-1, null);
-            return "upload fail";
+            return "upload file fail!";
         } finally {
             try {
                 fileOutputStream.close();
             } catch (IOException e) {
                 logger.error("", e);
+                return "upload file fail!";
             }
         }
 //        return new ReturnValue<>(ReturnCodeAndMsgEnum.Success, null);
-        return "upload success!";
+        return fileName;
     }
 }
