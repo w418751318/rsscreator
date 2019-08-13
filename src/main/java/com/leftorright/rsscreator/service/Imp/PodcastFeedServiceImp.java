@@ -1,5 +1,6 @@
-package com.leftorright.rsscreator.service;
+package com.leftorright.rsscreator.service.Imp;
 
+import com.leftorright.rsscreator.service.PodcastFeedService;
 import com.rometools.rome.feed.rss.Channel;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 
 @Service
-public class PodcastFeedServiceImp implements PodcastFeedService{
+public class PodcastFeedServiceImp implements PodcastFeedService {
     @Override
     public String podcastFeed() {
         //直接读取文件

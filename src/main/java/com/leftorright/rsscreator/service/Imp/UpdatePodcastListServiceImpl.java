@@ -1,7 +1,7 @@
-package com.leftorright.rsscreator.service;
+package com.leftorright.rsscreator.service.Imp;
 
-import com.leftorright.rsscreator.controller.PodcastFeedController;
 import com.leftorright.rsscreator.domain.response.ServiceResponse;
+import com.leftorright.rsscreator.service.UpdatePodcastListService;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -11,11 +11,7 @@ import org.dom4j.io.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
