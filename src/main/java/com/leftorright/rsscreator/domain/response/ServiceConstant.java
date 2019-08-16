@@ -11,6 +11,20 @@ public class ServiceConstant {
      * 数据处理正确，成功：'0000'-返回信息
      */
     public static final String MSG_SUCCESS = "服务调用成功！";
+
+    /**
+     * 数据处理正确，成功：'0001'-返回信息
+     */
+    public static final String MSG_SUCCESS_UPDATE= "成功更新播客！";
+
+    /**
+     * 数据处理失败：'0004'
+     */
+    public static final String STATUS_FAIL = "0004";
+    /**
+     * 数据处理正确，成功：'0001'-返回信息
+     */
+    public static final String MSG_FAIL_UPDATE= "更新播客失败！";
     
     /**
      * 请求参数错误，失败：'1000'

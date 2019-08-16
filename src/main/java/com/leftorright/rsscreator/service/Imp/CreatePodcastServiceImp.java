@@ -22,33 +22,6 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
                                          String link, String category, String description,
                                          String keywords, String author, String email) {
          logger.info("createPodcast:"+imageName+"title:"+ title);
-         if(imageName == "" || imageName == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","imageName == null",null);
-         }
-         if(title == "" || title == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","title == null",null);
-         }
-         if(subtitle == "" || subtitle == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","subtitle == null",null);
-         }
-         if(link == "" || link == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","link == null",null);
-         }
-         if(category == "" || category == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","category == null",null);
-         }
-         if(description == "" || description == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","description == null",null);
-         }
-         if(keywords == "" || keywords == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","keywords == null",null);
-         }
-         if(author == "" || author == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","author == null",null);
-         }
-        if(email == "" || email == null ){
-             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","email == null",null);
-        }
 
          String feed = link+"/feed";
          String imageHref = "http://47.99.46.74/file/"+imageName;//更换新
@@ -104,6 +77,8 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
 
         return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS, "","",null);
     }
+
+
     private static ServiceResponse<Object, Object> jsonResult(String responseCode, String responseMsg, String uid, String username,String[] permissions) {
         ServiceResponse serviceResponse = new ServiceResponse();
         serviceResponse.setStatus(responseCode);

@@ -4,5 +4,5 @@ import com.leftorright.rsscreator.domain.response.ServiceResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UpdatePodcastListService {
-    public ServiceResponse updatePodcastList(String uploadedPodcastName,String title,String shownotes);
+    public ServiceResponse updatePodcastList(String uploadedPodcastName,String title,String shownotes,String episode,String duration,String type,String length);
 }

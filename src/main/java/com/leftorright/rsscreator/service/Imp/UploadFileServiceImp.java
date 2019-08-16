@@ -1,13 +1,19 @@
 package com.leftorright.rsscreator.service.Imp;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.leftorright.rsscreator.service.UploadFileService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.mp3.MP3AudioHeader;
+import org.jaudiotagger.audio.mp3.MP3File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import java.beans.Encoder;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,12 +26,11 @@ public class UploadFileServiceImp implements UploadFileService {
     @Override
     public String uploadFile(MultipartFile zipFile) {
         String targetFilePath = "/app/file/";
+        String duration = "";
 //        String targetFilePath = "C:\\Users\\unicom\\Desktop\\";
         if(zipFile != null){
             String fileName = zipFile.getOriginalFilename();
-            logger.info("fileName:"+fileName);
             File targetFile = new File(targetFilePath + File.separator + fileName);
-
             FileOutputStream fileOutputStream = null;
             try {
                 fileOutputStream = new FileOutputStream(targetFile);
@@ -43,7 +48,19 @@ public class UploadFileServiceImp implements UploadFileService {
                     return "upload file fail!";
                 }
             }
-            return fileName;
+            try {
+                //获取音频文件时长
+                MP3File f = (MP3File) AudioFileIO.read(targetFile);
+                MP3AudioHeader audioHeader = (MP3AudioHeader)f.getAudioHeader();
+                duration =  audioHeader.getTrackLength()+"";
+                logger.info("duration:"+duration);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            JSONObject uploadReturn = new JSONObject();
+            uploadReturn.put("fileName",fileName);
+            uploadReturn.put("duration",duration);
+            return uploadReturn.toString();
         }else {
             return "upload file fail!(uploadfile == null)";
         }
