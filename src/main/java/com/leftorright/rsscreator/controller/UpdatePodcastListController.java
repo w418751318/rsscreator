@@ -17,10 +17,10 @@ public class UpdatePodcastListController {
     @Autowired
     private UpdatePodcastListService updatePodcastListService;
 
-    @RequestMapping(value = "/",method = RequestMethod.GET)
-    public ServiceResponse updatePodcastList(@RequestParam("uploadedPodcastName") String uploadedPodcastName,@RequestParam("title") String title,@RequestParam("shownotes") String shownotes,@RequestParam("episode") String episode,@RequestParam("duration") String duration,@RequestParam("type") String type,@RequestParam("length") String length){
-        logger.info("updatePodcastList:uploadedPodcastName-"+uploadedPodcastName+"title-"+title+"shownotes"+shownotes+"episode"+episode);
-        return updatePodcastListService.updatePodcastList(title, shownotes, uploadedPodcastName, episode, duration, type, length);
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public ServiceResponse updatePodcastList(@RequestParam("uploadedPodcastName") String uploadedPodcastName, @RequestParam("title") String title, @RequestParam("shownotes") String shownotes, @RequestParam("episode") String episode, @RequestParam("duration") String duration, @RequestParam("type") String type, @RequestParam("length") String length) {
+        logger.info("updatePodcastList:uploadedPodcastName-" + uploadedPodcastName + " title-" + title + " shownotes" + shownotes + " episode" + episode);
+        return updatePodcastListService.updatePodcastList(uploadedPodcastName, title, shownotes, episode, duration, type, length);
     }
 
 }
