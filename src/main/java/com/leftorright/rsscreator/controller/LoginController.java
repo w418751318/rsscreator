@@ -5,11 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 登录接口
+ */
 @RestController
 @RequestMapping("/login")
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-    @RequestMapping(value = "/",method = RequestMethod.GET)
+    @RequestMapping(value = "/",method = RequestMethod.POST)
     public ServiceResponse<Object, Object> login(@RequestParam("userName") String userName,@RequestParam("passWord") String passWord){
         String responseCode = "";
         String responseMsg = "";

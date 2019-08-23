@@ -1,5 +1,7 @@
 package com.leftorright.rsscreator.domain.response;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.slf4j.Logger;
@@ -31,6 +33,28 @@ public class ServiceResponse<DATA,ATTACH> {
     @JsonProperty("permissions")
     private String[] permissions;
 
+    @ApiModelProperty(name = "rspData", value = "返回数据", required = true, example = "{}")
+    @JsonProperty("rspData")
+    private JSONObject rspData;
+
+    @ApiModelProperty(name = "rspDataArray", value = "返回数据", required = true, example = "{}")
+    @JsonProperty("rspDataArray")
+    private JSONArray rspDataArray;
+
+    public JSONArray getRspDataArray() {
+        return rspDataArray;
+    }
+
+    public void setRspDataArray(JSONArray rspDataArray) {
+        this.rspDataArray = rspDataArray;
+    }
+
+    public JSONObject getRspData() {
+        return rspData;
+    }
+    public void setRspData(JSONObject rspData) {
+        this.rspData = rspData;
+    }
 
     public String getUid() {
         return uid;

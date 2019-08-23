@@ -15,8 +15,7 @@ public class PodcastFeedServiceImp implements PodcastFeedService {
     @Override
     public String podcastFeed() {
         //直接读取文件
-//        String filePath = "/app/file/rss.xml";
-        String filePath = "C:\\Users\\unicom\\Desktop\\rss.xml";
+        String filePath = "/app/file/rss.xml";
         SAXReader reader = new SAXReader();
         Document document = null;
         try {
@@ -29,15 +28,5 @@ public class PodcastFeedServiceImp implements PodcastFeedService {
             e.printStackTrace();
         }
         return document.toString();
-
-
-//        利用rome包
-//        Channel channel = new Channel();
-//        channel.setTitle("这是一个播客的标题");
-//        channel.setLink("https://www.apple.com/itunes/podcasts/");
-//        channel.setLanguage("zh-CN");
-
-
-
     }
 }

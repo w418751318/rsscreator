@@ -2,6 +2,8 @@ package com.leftorright.rsscreator.service.Imp;
 
 import com.leftorright.rsscreator.domain.response.ServiceConstant;
 import com.leftorright.rsscreator.domain.response.ServiceResponse;
+import com.leftorright.rsscreator.entity.PodcastItem;
+import com.leftorright.rsscreator.repository.PodcastItemRepository;
 import com.leftorright.rsscreator.service.UpdatePodcastListService;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -11,6 +13,8 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -25,14 +29,20 @@ import java.util.TimeZone;
 @Service
 public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
     private static final Logger logger = LoggerFactory.getLogger(UpdatePodcastListServiceImpl.class);
+    @Autowired
+    private PodcastItemRepository podcastItemRepository ;
+
+    //读取配置文件中的配置：输出（读取）rss文件地址
+//    @Value("${management.filePath_dev}")
+    @Value("${management.filePath_prod}")
+    private String filePath;
 
     @Override
     public ServiceResponse updatePodcastList(String uploadedPodcastName, String title, String shownotes, String episode, String duration, String type, String length) {
-//        title, shownotes, uploadedPodcastName, episode, duration, type, length
         logger.info("uploadedPodcastName-"+uploadedPodcastName+" title-"+title+" shownotes"+shownotes+" episode"+episode);
 
         //直接读取文件
-        String filePath = "/app/file/rss.xml";
+//        String filePath = "/app/file/rss.xml";
 //        String filePath = "/Users/zhuyikun/Desktop/rss.xml";
         File file = new File(filePath);
         SAXReader reader = new SAXReader();
@@ -45,7 +55,16 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
             channel = rss.element("channel");
             String podcastAuthor = channel.elementText("author");
             String podcastLink = channel.elementText("link");
+            //写入数据库
+            Object podcastItem = savePodcastItemToDB(podcastLink,podcastAuthor,title, shownotes, uploadedPodcastName, episode, duration, type, length);
+            if (podcastItem instanceof PodcastItem){
+                logger.info("更新播客 "+title+" 成功！");
+            }else{
+                return jsonResult(ServiceConstant.STATUS_FAIL, ServiceConstant.MSG_FAIL_UPDATE_DB, "", "", null);
+            }
+            //创建xml中的item节点
             Element newItem = createNewItem(podcastLink,podcastAuthor,title, shownotes, uploadedPodcastName, episode, duration, type, length);
+            //向channel节点中插入item节点
             channel.add(newItem);
 
             XMLWriter writer = new XMLWriter(new FileWriter(file));
@@ -66,6 +85,40 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_UPDATE, "", "", null);
     }
 
+    /**
+     * 保存本集播客相关信息到数据库表：tb_podcastitem
+     * @param podcastLink
+     * @param podcastAuthor
+     * @param title
+     * @param shownotes
+     * @param uploadedPodcastName
+     * @param episode
+     * @param duration
+     * @param type
+     * @param length
+     * @return
+     */
+    private PodcastItem savePodcastItemToDB(String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String type, String length) {
+        String itemRadioFileUrl = podcastLink + "/file/" + uploadedPodcastName;//上传音频文件在服务器上的位置
+        String itemLink = podcastLink + "/" + episode;//link节点的内容为本集的网址，拼写规则：主页网址(link)+"/"+episode
+        //上传时间
+        SimpleDateFormat sdf3 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        sdf3.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String pubDateString = sdf3.format(new Date());
+        PodcastItem podcastItem = new PodcastItem();
+        podcastItem.setAuthor(podcastAuthor);
+        podcastItem.setDescription(shownotes);
+        podcastItem.setDuration(duration);
+        podcastItem.setEnclosure_length(length);
+        podcastItem.setEnclosure_type(type);
+        podcastItem.setEnclosure_url(itemRadioFileUrl);
+        podcastItem.setEpisode(episode);
+        podcastItem.setLink(itemLink);
+        podcastItem.setPubDate(pubDateString);
+        podcastItem.setTitle(title);
+        return podcastItemRepository.save(podcastItem);
+    }
+
     private Element createNewItem(String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String type, String length) {
         //新增加的播客
         Element newItem = DocumentHelper.createElement("item");
@@ -82,10 +135,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         Element itunesDuration = DocumentHelper.createElement("itunes:duration");
 
         itunesEpisode.addText(episode);
-        System.out.println("title:"+title);
         podcastTitle.addText(title);
         itunesTitle.addText(title);
-        System.out.println("shownotes:"+shownotes);
         description.addText(shownotes);
         //需要一个link的内容
         String itemLink = podcastLink + "/" + episode;

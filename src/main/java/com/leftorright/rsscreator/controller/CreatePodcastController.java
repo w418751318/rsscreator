@@ -21,7 +21,7 @@ public class CreatePodcastController {
     private CreatePodcastService createPodcastService;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public ServiceResponse<Object, Object> login(@RequestParam("imageName") String imageName,
+    public ServiceResponse<Object, Object> createPodcast(@RequestParam("imageName") String imageName,
                                                  @RequestParam("title") String title,
                                                  @RequestParam("subtitle") String subtitle,
                                                  @RequestParam("link") String link,

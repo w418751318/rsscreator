@@ -2,6 +2,8 @@ package com.leftorright.rsscreator.service.Imp;
 
 import com.leftorright.rsscreator.domain.response.ServiceConstant;
 import com.leftorright.rsscreator.domain.response.ServiceResponse;
+import com.leftorright.rsscreator.entity.PodcastInfo;
+import com.leftorright.rsscreator.repository.PodcastInfoRepository;
 import com.leftorright.rsscreator.service.CreatePodcastService;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -10,21 +12,47 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.List;
 
 @Service
 public class CreatePodcastServiceImp implements CreatePodcastService {
     private static final Logger logger = LoggerFactory.getLogger(CreatePodcastServiceImp.class);
+    @Autowired
+    private PodcastInfoRepository podcastInfoRepository;
+
+    //读取配置文件中的配置：输出（读取）rss文件地址
+//    @Value("${management.filePath_dev}")
+    @Value("${management.filePath_prod}")
+    private String filePath;
+
     @Override
     public ServiceResponse createPodcast(String imageName, String title, String subtitle,
                                          String link, String category, String description,
                                          String keywords, String author, String email) {
-         logger.info("createPodcast:"+imageName+"title:"+ title);
+        logger.info("createPodcast:"+imageName+"title:"+ title);
+        String feed = link+"/feed";
+        String imageHref = "http://47.99.46.74/file/"+imageName;//更换新
 
-         String feed = link+"/feed";
-         String imageHref = "http://47.99.46.74/file/"+imageName;//更换新
+        //存入数据库
+        PodcastInfo podcastInfo = new PodcastInfo();
+        podcastInfo.setAuthor(author);
+        podcastInfo.setDescription(description);
+        podcastInfo.setEmail(email);
+        podcastInfo.setImage(imageHref);
+        podcastInfo.setLink(link);
+        podcastInfo.setSubtitle(subtitle);
+        podcastInfo.setTitle(title);
+        if (podcastInfoRepository.save(podcastInfo) instanceof PodcastInfo){
+            logger.info("写入数据库成功！");
+        }else {
+            logger.info("写入数据库失败！");
+        }
+
         /**
          * 创建一个rss文件
          */
@@ -59,8 +87,10 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         owner.addElement("itunes:email").addText(email);
 
         try {
+//            String filePath = "/app/file/rss.xml";
+//            String filePath1 = "/Users/zhuyikun/Desktop/rss.xml";
             OutputFormat format = OutputFormat.createPrettyPrint();
-            XMLWriter writer = new XMLWriter( new FileOutputStream(new File("/app/file/rss.xml")), format);
+            XMLWriter writer = new XMLWriter( new FileOutputStream(new File(filePath)), format);
 //            XMLWriter writer = new XMLWriter( new FileOutputStream(new File("C:\\Users\\unicom\\Desktop\\rss.xml")), format);
             writer.write(document);
             logger.info("Create rss.xml success!");
@@ -75,7 +105,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","",null);
         }
 
-        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS, "","",null);
+        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_CREATE, "","",null);
     }
 
 
@@ -86,6 +116,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         serviceResponse.setUid(uid);
         serviceResponse.setUsername(username);
         serviceResponse.setPermissions(permissions);
+        serviceResponse.setRspData(null);
         return serviceResponse;
     }
 }

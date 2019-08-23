@@ -13,18 +13,46 @@ public class ServiceConstant {
     public static final String MSG_SUCCESS = "服务调用成功！";
 
     /**
+     * 创建播客处理正确，成功：'0000'-返回信息
+     */
+    public static final String MSG_SUCCESS_CREATE = "创建播客成功！";
+
+    /**
      * 数据处理正确，成功：'0001'-返回信息
      */
     public static final String MSG_SUCCESS_UPDATE= "成功更新播客！";
+
+    /**
+     * 数据处理正确，成功：'0000'-返回信息
+     */
+    public static final String MSG_SUCCESS_QUERY= "查询数据库成功！";
 
     /**
      * 数据处理失败：'0004'
      */
     public static final String STATUS_FAIL = "0004";
     /**
-     * 数据处理正确，成功：'0001'-返回信息
+     *更新播客失败，成功：'0004'-返回信息
      */
     public static final String MSG_FAIL_UPDATE= "更新播客失败！";
+    /**
+     *更新播客失败，成功：'0004'-返回信息
+     */
+    public static final String MSG_FAIL_UPDATE_DB= "更新播客插入数据库失败！";
+
+    /**
+     * 查询数据库失败：'0005'
+     */
+    public static final String STATUS_QUERY_FAIL = "0005";
+    /**
+     * 查询数据库失败：'0006'
+     */
+    public static final String STATUS_QUERY_FAIL_ITEM = "0006";
+    /**
+     * 查询数据库失败：'0005'-返回信息
+     */
+    public static final String MSG_FAIL_QUERY= "查询数据库失败！";
+
     
     /**
      * 请求参数错误，失败：'1000'
