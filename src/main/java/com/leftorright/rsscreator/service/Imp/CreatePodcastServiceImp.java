@@ -36,7 +36,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
                                          String keywords, String author, String email) {
         logger.info("createPodcast:"+imageName+"title:"+ title);
         String feed = link+"/feed";
-        String imageHref = "http://47.99.46.74/file/"+imageName;//更换新
+        String imageHref = "http://47.103.157.221/file/"+imageName;//更换新
 
         //存入数据库
         PodcastInfo podcastInfo = new PodcastInfo();

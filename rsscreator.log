@@ -1,0 +1,46 @@
+2019-08-28 10:44:12.009  INFO 28138 --- [main] c.l.r.RsscreatorApplicationTests         : Starting RsscreatorApplicationTests on zhuyikundeMac-mini.local with PID 28138 (started by zhuyikun in /Users/zhuyikun/code/springboot_workplace/rsscreator)
+2019-08-28 10:44:12.011  INFO 28138 --- [main] c.l.r.RsscreatorApplicationTests         : No active profile set, falling back to default profiles: default
+2019-08-28 10:44:12.492  INFO 28138 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-08-28 10:44:12.545  INFO 28138 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 44ms. Found 2 repository interfaces.
+2019-08-28 10:44:12.865  INFO 28138 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7dd3ea35] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-08-28 10:44:13.072  INFO 28138 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2019-08-28 10:44:13.118  INFO 28138 --- [main] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.10.Final}
+2019-08-28 10:44:13.119  INFO 28138 --- [main] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2019-08-28 10:44:13.256  INFO 28138 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-08-28 10:44:13.363  INFO 28138 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2019-08-28 10:44:13.368  WARN 28138 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2019-08-28 10:44:13.511  INFO 28138 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2019-08-28 10:44:13.522  INFO 28138 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2019-08-28 10:44:14.058  INFO 28138 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-08-28 10:44:14.711  INFO 28138 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-08-28 10:44:14.749  WARN 28138 --- [main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-08-28 10:44:14.959  INFO 28138 --- [main] c.l.r.RsscreatorApplicationTests         : Started RsscreatorApplicationTests in 3.183 seconds (JVM running for 3.823)
+2019-08-28 10:44:15.062  INFO 28138 --- [Thread-1] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-08-28 10:44:15.064  INFO 28138 --- [Thread-1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2019-08-28 10:44:15.072  INFO 28138 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2019-08-28 10:44:15.085  INFO 28138 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2019-08-28 11:37:55.071  INFO 29670 --- [main] c.l.r.RsscreatorApplicationTests         : Starting RsscreatorApplicationTests on zhuyikundeMac-mini.local with PID 29670 (started by zhuyikun in /Users/zhuyikun/code/springboot_workplace/rsscreator)
+2019-08-28 11:37:55.072  INFO 29670 --- [main] c.l.r.RsscreatorApplicationTests         : No active profile set, falling back to default profiles: default
+2019-08-28 11:37:55.545  INFO 29670 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-08-28 11:37:55.594  INFO 29670 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 43ms. Found 2 repository interfaces.
+2019-08-28 11:37:55.901  INFO 29670 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$a4596aa0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-08-28 11:37:56.111  INFO 29670 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2019-08-28 11:37:56.159  INFO 29670 --- [main] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.10.Final}
+2019-08-28 11:37:56.160  INFO 29670 --- [main] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2019-08-28 11:37:56.264  INFO 29670 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-08-28 11:37:56.383  INFO 29670 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2019-08-28 11:37:56.387  WARN 29670 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2019-08-28 11:37:56.532  INFO 29670 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2019-08-28 11:37:56.544  INFO 29670 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2019-08-28 11:37:57.023  INFO 29670 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-08-28 11:37:57.616  INFO 29670 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-08-28 11:37:57.654  WARN 29670 --- [main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-08-28 11:37:57.871  INFO 29670 --- [main] c.l.r.RsscreatorApplicationTests         : Started RsscreatorApplicationTests in 3.121 seconds (JVM running for 3.717)
+2019-08-28 11:37:57.976  INFO 29670 --- [Thread-1] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-08-28 11:37:57.977  INFO 29670 --- [Thread-1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2019-08-28 11:37:57.981  INFO 29670 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2019-08-28 11:37:57.986  INFO 29670 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

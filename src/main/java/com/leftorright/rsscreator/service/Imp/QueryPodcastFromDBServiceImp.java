@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -32,7 +34,7 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         List<PodcastInfo> podcastList = podcastInfoRepository.findAll();
         JSONObject podcastInfoJSONObject = new JSONObject();
         if (podcastList.size() > 0) {
-            PodcastInfo podcastInfo = podcastList.get(0);//一般情况下，只有一个数据
+            PodcastInfo podcastInfo = podcastList.get(0);//一般情况下，只有一个数据,未来可以扩展为管理多个播客
             podcastInfoJSONObject.put("email", podcastInfo.getEmail());
             podcastInfoJSONObject.put("author", podcastInfo.getAuthor());
             podcastInfoJSONObject.put("description", podcastInfo.getDescription());
@@ -56,12 +58,14 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         if (podcastItemList.size() > 0) {
             for (PodcastItem podcastItem : podcastItemList) {
                 JSONObject podcastItemJSONObject = new JSONObject();
-                podcastItemJSONObject.put("episode",podcastItem.getEpisode());
-                podcastItemJSONObject.put("title",podcastItem.getTitle());
-                podcastItemJSONObject.put("description",podcastItem.getDescription());
-                podcastItemJSONObject.put("link",podcastItem.getLink());
-                podcastItemJSONObject.put("author",podcastItem.getAuthor());
-                podcastItemJSONObject.put("pubDate",podcastItem.getPubDate());
+                podcastItemJSONObject.put("key",podcastItem.getEpisode());//此处key用于前端展示
+                podcastItemJSONObject.put("episodename",podcastItem.getTitle());//此处episodename用于前端展示
+                Date date = new Date(podcastItem.getPubDate());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                podcastItemJSONObject.put("date",simpleDateFormat.format(date));//此处date用于前端展示
+                int totalTime = Integer.parseInt(podcastItem.getDuration());
+                String totalTimeStr = totalTime/3600 > 0 ? totalTime/3600+"时" + (totalTime%3600)/60 + "分" + (totalTime%3600)%60 + "秒":(totalTime%3600)/60 + "分" + (totalTime%3600)%60 + "秒";
+                podcastItemJSONObject.put("length",totalTimeStr);//此处date用于前端展示
                 podcastItemJSONArray.add(podcastItemJSONObject);
             }
         } else {

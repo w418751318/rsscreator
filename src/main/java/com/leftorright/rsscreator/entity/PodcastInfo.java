@@ -3,7 +3,7 @@ package com.leftorright.rsscreator.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "podcast") // 指定关联的数据库的表名
+@Table(name = "tb_podcast") // 指定关联的数据库的表名
 public class PodcastInfo {
 
     private static final long serialVersionUID = 1L;

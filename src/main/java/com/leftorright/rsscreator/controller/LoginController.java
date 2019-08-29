@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/login")
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-    @RequestMapping(value = "/",method = RequestMethod.POST)
+    @RequestMapping(value = "/",method = RequestMethod.GET)
     public ServiceResponse<Object, Object> login(@RequestParam("userName") String userName,@RequestParam("passWord") String passWord){
         String responseCode = "";
         String responseMsg = "";
