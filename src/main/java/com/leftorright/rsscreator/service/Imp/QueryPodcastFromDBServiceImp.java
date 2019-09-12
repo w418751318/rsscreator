@@ -41,7 +41,7 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
             podcastInfoJSONObject.put("image", podcastInfo.getImage());
             podcastInfoJSONObject.put("link", podcastInfo.getLink());
             podcastInfoJSONObject.put("subtitle", podcastInfo.getSubtitle());
-            podcastInfoJSONObject.put("title", podcastInfo.getTitle());
+            podcastInfoJSONObject.put("title", podcastInfo.getPodcastname());
             logger.info("podcastInfoJSONObject: " + podcastInfoJSONObject.toJSONString());
         } else {
             logger.info("数据库中没有播客的数据");

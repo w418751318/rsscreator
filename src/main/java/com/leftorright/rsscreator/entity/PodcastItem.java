@@ -22,6 +22,8 @@ public class PodcastItem {
     private String enclosure_url;
     private String duration;
     private String episode;
+    private String podcastname;
+
 
 
     public Long getId() {
@@ -111,5 +113,13 @@ public class PodcastItem {
 
     public void setEpisode(String episode) {
         this.episode = episode;
+    }
+
+    public String getPodcastname() {
+        return podcastname;
+    }
+
+    public void setPodcastname(String podcastname) {
+        this.podcastname = podcastname;
     }
 }

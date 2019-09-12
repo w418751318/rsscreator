@@ -13,13 +13,13 @@ public class PodcastInfo {
     @Column(name = "id", nullable = false)
     private Long id; // 主键ID
 
-    private String title;
     private String subtitle;
     private String link;
     private String description;
     private String author;
     private String image;
     private String email;
+    private String podcastname;
 
     public Long getId() {
         return id;
@@ -29,13 +29,6 @@ public class PodcastInfo {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getSubtitle() {
         return subtitle;
@@ -85,4 +78,11 @@ public class PodcastInfo {
         this.email = email;
     }
 
+    public String getPodcastname() {
+        return podcastname;
+    }
+
+    public void setPodcastname(String podcastname) {
+        this.podcastname = podcastname;
+    }
 }

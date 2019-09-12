@@ -31,12 +31,12 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
     private String filePath;
 
     @Override
-    public ServiceResponse createPodcast(String imageName, String title, String subtitle,
+    public ServiceResponse createPodcast(String imageName, String podcastName, String subtitle,
                                          String link, String category, String description,
                                          String keywords, String author, String email) {
-        logger.info("createPodcast:"+imageName+"title:"+ title);
+        logger.info("createPodcast:"+imageName+"podcastName:"+ podcastName);
         String feed = link+"/feed";
-        String imageHref = "http://47.103.157.221/file/"+imageName;//更换新
+        String imageHref = "https://justpodmedia.com/file/"+imageName;//更换新
 
         //存入数据库
         PodcastInfo podcastInfo = new PodcastInfo();
@@ -46,7 +46,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         podcastInfo.setImage(imageHref);
         podcastInfo.setLink(link);
         podcastInfo.setSubtitle(subtitle);
-        podcastInfo.setTitle(title);
+        podcastInfo.setPodcastname(podcastName);
         if (podcastInfoRepository.save(podcastInfo) instanceof PodcastInfo){
             logger.info("写入数据库成功！");
         }else {
@@ -67,7 +67,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
 
         // 添加channel节点
         Element channel= rss.addElement("channel");
-        channel.addElement("title").addText(title);
+        channel.addElement("title").addText(podcastName);
         channel.addElement("itunes:subtitle").addText(subtitle);
         channel.addElement("link").addText(link);
         channel.addElement("atom:link").addAttribute("href",feed)
@@ -83,7 +83,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         channel.addElement("itunes:image").addAttribute("href",imageHref);
 
         Element owner = channel.addElement("itunes:owner");
-        owner.addElement("itunes:name").addText(title);
+        owner.addElement("itunes:name").addText(podcastName);
         owner.addElement("itunes:email").addText(email);
 
         try {
