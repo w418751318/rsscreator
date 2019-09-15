@@ -34,14 +34,13 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         List<PodcastInfo> podcastList = podcastInfoRepository.findAll();
         JSONObject podcastInfoJSONObject = new JSONObject();
         if (podcastList.size() > 0) {
-            PodcastInfo podcastInfo = podcastList.get(0);//一般情况下，只有一个数据,未来可以扩展为管理多个播客
-            podcastInfoJSONObject.put("email", podcastInfo.getEmail());
-            podcastInfoJSONObject.put("author", podcastInfo.getAuthor());
-            podcastInfoJSONObject.put("description", podcastInfo.getDescription());
-            podcastInfoJSONObject.put("image", podcastInfo.getImage());
-            podcastInfoJSONObject.put("link", podcastInfo.getLink());
-            podcastInfoJSONObject.put("subtitle", podcastInfo.getSubtitle());
-            podcastInfoJSONObject.put("title", podcastInfo.getPodcastname());
+            String[] podcastNames = new String[podcastList.size()];//存放播客名字的数组
+            //循环取出podcastList中的所有播客的名字
+            for (int i = 0;i<podcastList.size();i++){
+                podcastNames[i] = podcastList.get(i).getPodcastname();
+//                logger.info("podcastList.get(i).getPodcastname() " + podcastList.get(i).getPodcastname());
+            }
+            podcastInfoJSONObject.put("podcastList", podcastNames);//将存放播客列表的数组放到JSONObject中{"podcastList":["无聊斋"，"ridehome"]}
             logger.info("podcastInfoJSONObject: " + podcastInfoJSONObject.toJSONString());
         } else {
             logger.info("数据库中没有播客的数据");
@@ -51,9 +50,9 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
     }
 
     @Override
-    public ServiceResponse queryPodcastItems() {
+    public ServiceResponse queryPodcastItems(String podcastName) {
         //查询数据库 items
-        List<PodcastItem> podcastItemList = podcastItemRepository.findAll();
+        List<PodcastItem> podcastItemList = podcastItemRepository.findPodcastItemByPodcastname(podcastName);
         JSONArray podcastItemJSONArray = new JSONArray();
         if (podcastItemList.size() > 0) {
             for (PodcastItem podcastItem : podcastItemList) {

@@ -24,13 +24,13 @@ public class UploadFileServiceImp implements UploadFileService {
     private static final Logger logger = LoggerFactory.getLogger(UploadFileServiceImp.class);
 
     @Override
-    public String uploadFile(MultipartFile zipFile) {
+    public String uploadFile(MultipartFile zipFile,String fileType) {
         String targetFilePath = "/app/file/";
         String duration = "";
 //        String targetFilePath = "C:\\Users\\unicom\\Desktop\\";
         if(zipFile != null){
             String fileName = zipFile.getOriginalFilename();
-            File targetFile = new File(targetFilePath + File.separator + fileName);
+            File targetFile = new File(targetFilePath + File.separator + fileType+File.separator+fileName);
             FileOutputStream fileOutputStream = null;
             try {
                 fileOutputStream = new FileOutputStream(targetFile);

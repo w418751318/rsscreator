@@ -26,8 +26,8 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
     private PodcastInfoRepository podcastInfoRepository;
 
     //读取配置文件中的配置：输出（读取）rss文件地址
-//    @Value("${management.filePath_dev}")
-    @Value("${management.filePath_prod}")
+//    @Value("${management.filePath_rss_dev}")
+    @Value("${management.filePath_rss_prod}")
     private String filePath;
 
     @Override
@@ -35,8 +35,8 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
                                          String link, String category, String description,
                                          String keywords, String author, String email) {
         logger.info("createPodcast:"+imageName+"podcastName:"+ podcastName);
-        String feed = link+"/feed";
-        String imageHref = "https://justpodmedia.com/file/"+imageName;//更换新
+        String feed = link+filePath+podcastName+".xml";//rss地址：link="www.justpodmedia.com"用户输入
+        String imageHref = "https://justpodmedia.com/file/pic/"+imageName;//更换新
 
         //存入数据库
         PodcastInfo podcastInfo = new PodcastInfo();
@@ -90,7 +90,8 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
 //            String filePath = "/app/file/rss.xml";
 //            String filePath1 = "/Users/zhuyikun/Desktop/rss.xml";
             OutputFormat format = OutputFormat.createPrettyPrint();
-            XMLWriter writer = new XMLWriter( new FileOutputStream(new File(filePath)), format);
+            format.setEncoding("utf-8");
+            XMLWriter writer = new XMLWriter( new FileOutputStream(new File(filePath+podcastName+".xml")), format);
 //            XMLWriter writer = new XMLWriter( new FileOutputStream(new File("C:\\Users\\unicom\\Desktop\\rss.xml")), format);
             writer.write(document);
             logger.info("Create rss.xml success!");

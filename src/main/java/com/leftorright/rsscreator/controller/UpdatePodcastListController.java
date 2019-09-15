@@ -18,9 +18,9 @@ public class UpdatePodcastListController {
     private UpdatePodcastListService updatePodcastListService;
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ServiceResponse updatePodcastList(@RequestParam("uploadedPodcastName") String uploadedPodcastName, @RequestParam("title") String title, @RequestParam("shownotes") String shownotes, @RequestParam("episode") String episode, @RequestParam("duration") String duration, @RequestParam("type") String type, @RequestParam("length") String length) {
+    public ServiceResponse updatePodcastList(@RequestParam("podcastName") String podcastName,@RequestParam("uploadedPodcastName") String uploadedPodcastName, @RequestParam("title") String title, @RequestParam("shownotes") String shownotes, @RequestParam("episode") String episode, @RequestParam("duration") String duration, @RequestParam("type") String type, @RequestParam("length") String length) {
         logger.info("updatePodcastList:uploadedPodcastName-" + uploadedPodcastName + " title-" + title + " shownotes" + shownotes + " episode" + episode);
-        return updatePodcastListService.updatePodcastList(uploadedPodcastName, title, shownotes, episode, duration, type, length);
+        return updatePodcastListService.updatePodcastList(podcastName,uploadedPodcastName, title, shownotes, episode, duration, type, length);
     }
 
 }
