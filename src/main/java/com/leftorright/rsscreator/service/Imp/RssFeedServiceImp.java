@@ -1,6 +1,8 @@
 package com.leftorright.rsscreator.service.Imp;
 
 import com.leftorright.rsscreator.service.RssFeedService;
+import com.leftorright.rsscreator.utils.PinyinTool;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -26,12 +28,17 @@ public class RssFeedServiceImp implements RssFeedService {
     public String rssFeed(String podcastName) {
         SAXReader reader = new SAXReader();
         Document document = null;
+        //将podcastName转成拼音
+        PinyinTool pinyinTool = new PinyinTool();
         try {
-            document = reader.read(filePath+podcastName+".xml");
+            String xmlFileName =  pinyinTool.toPinYin(podcastName);
+            document = reader.read(filePath+xmlFileName+".xml");
         } catch (DocumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return null;//当输入的rss地址不合法：rss文件不存在时，返回null
+        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+            badHanyuPinyinOutputFormatCombination.printStackTrace();
         }
         logger.info("document.toString()---"+document.toString());
         return document.asXML();

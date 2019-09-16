@@ -10,6 +10,8 @@ import com.leftorright.rsscreator.entity.PodcastItem;
 import com.leftorright.rsscreator.repository.PodcastInfoRepository;
 import com.leftorright.rsscreator.repository.PodcastItemRepository;
 import com.leftorright.rsscreator.service.QueryPodcastFromDBService;
+import com.leftorright.rsscreator.utils.PinyinTool;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +53,19 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
 
     @Override
     public ServiceResponse queryPodcastItems(String podcastName) {
+        //使用汉字转成的拼音，用作xml文件的名字
+        PinyinTool tool = new PinyinTool();
+        String xmlFileName = null;
+        try {
+            xmlFileName = tool.toPinYin(podcastName);
+        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+            badHanyuPinyinOutputFormatCombination.printStackTrace();
+        }
+
         //查询数据库 items
         List<PodcastItem> podcastItemList = podcastItemRepository.findPodcastItemByPodcastname(podcastName);
         JSONArray podcastItemJSONArray = new JSONArray();
+        JSONObject podcastInfoJSONObject = new JSONObject();
         if (podcastItemList.size() > 0) {
             for (PodcastItem podcastItem : podcastItemList) {
                 JSONObject podcastItemJSONObject = new JSONObject();
@@ -67,11 +79,14 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
                 podcastItemJSONObject.put("length",totalTimeStr);//此处date用于前端展示
                 podcastItemJSONArray.add(podcastItemJSONObject);
             }
+            //本播客feed地址
+            String feedStr = "https://justpodmedia.com/feed?ep="+xmlFileName;
+            podcastInfoJSONObject.put("feed",feedStr);
         } else {
             logger.info("数据库中没有播客item的数据");
             return jsonResult(ServiceConstant.STATUS_QUERY_FAIL_ITEM, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null,null);
         }
-        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, null,podcastItemJSONArray);
+        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject,podcastItemJSONArray);
     }
 
     private static ServiceResponse<Object, Object> jsonResult(String responseCode, String responseMsg, String uid, String username, String[] permissions, JSONObject podcastInfoJSONObject,JSONArray podcastItemJSONArray) {

@@ -5,6 +5,8 @@ import com.leftorright.rsscreator.domain.response.ServiceResponse;
 import com.leftorright.rsscreator.entity.PodcastInfo;
 import com.leftorright.rsscreator.repository.PodcastInfoRepository;
 import com.leftorright.rsscreator.service.CreatePodcastService;
+import com.leftorright.rsscreator.utils.PinyinTool;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -35,8 +37,17 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
                                          String link, String category, String description,
                                          String keywords, String author, String email) {
         logger.info("createPodcast:"+imageName+"podcastName:"+ podcastName);
-        String feed = link+filePath+podcastName+".xml";//rss地址：link="www.justpodmedia.com"用户输入
-        String imageHref = "https://justpodmedia.com/file/pic/"+imageName;//更换新
+
+        //使用汉字转成的拼音，用作xml文件的名字
+        PinyinTool tool = new PinyinTool();
+        String xmlFileName = null;
+        try {
+            xmlFileName = tool.toPinYin(podcastName);
+        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+            badHanyuPinyinOutputFormatCombination.printStackTrace();
+        }
+        String feed = link+"/feed?ep="+xmlFileName;
+        String imageHref = "https://justpodmedia.com/pic/"+imageName;//更换新
 
         //存入数据库
         PodcastInfo podcastInfo = new PodcastInfo();
@@ -51,6 +62,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
             logger.info("写入数据库成功！");
         }else {
             logger.info("写入数据库失败！");
+            return jsonResult(ServiceConstant.STATUS_DB_ERROR, ServiceConstant.MSG_DB_ERROR, "01","",null);
         }
 
         /**
@@ -89,9 +101,10 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         try {
 //            String filePath = "/app/file/rss.xml";
 //            String filePath1 = "/Users/zhuyikun/Desktop/rss.xml";
+
             OutputFormat format = OutputFormat.createPrettyPrint();
             format.setEncoding("utf-8");
-            XMLWriter writer = new XMLWriter( new FileOutputStream(new File(filePath+podcastName+".xml")), format);
+            XMLWriter writer = new XMLWriter( new FileOutputStream(new File(filePath+xmlFileName+".xml")), format);
 //            XMLWriter writer = new XMLWriter( new FileOutputStream(new File("C:\\Users\\unicom\\Desktop\\rss.xml")), format);
             writer.write(document);
             logger.info("Create rss.xml success!");

@@ -104,6 +104,15 @@ public class ServiceConstant {
      */
     public static final String MSG_CONNECTIMEOUT = "网络连接超时啦！";
 
+    /**
+     * 创建播客写入数据库失败，失败:'3003'
+     */
+    public static final String STATUS_DB_ERROR = "3003";
+
+    /**
+     * 创建播客写入数据库失败，失败:'3002'-返回信息
+     */
+    public static final String MSG_DB_ERROR = "创建播客写入数据库失败";
 
 
 

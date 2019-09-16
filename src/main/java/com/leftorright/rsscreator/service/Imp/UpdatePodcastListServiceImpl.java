@@ -5,6 +5,8 @@ import com.leftorright.rsscreator.domain.response.ServiceResponse;
 import com.leftorright.rsscreator.entity.PodcastItem;
 import com.leftorright.rsscreator.repository.PodcastItemRepository;
 import com.leftorright.rsscreator.service.UpdatePodcastListService;
+import com.leftorright.rsscreator.utils.PinyinTool;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -44,7 +46,16 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         //直接读取rss文件
 //        String filePath = "/app/file/rss.xml";
 //        String filePath = "/Users/zhuyikun/Desktop/rss.xml";
-        File file = new File(filePath+podcastName+".xml");
+        //使用汉字转成的拼音，用作xml文件的名字
+        PinyinTool tool = new PinyinTool();
+        String xmlFileName = null;
+        try {
+            xmlFileName = tool.toPinYin(podcastName);
+        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+            badHanyuPinyinOutputFormatCombination.printStackTrace();
+        }
+
+        File file = new File(filePath+xmlFileName+".xml");
         SAXReader reader = new SAXReader();
         Document document = null;
         Element rss = null;
@@ -99,7 +110,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
      * @return
      */
     private PodcastItem savePodcastItemToDB(String podcastName,String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String type, String length) {
-        String itemRadioFileUrl = podcastLink + "/file/audio/" + uploadedPodcastName;//上传音频文件在服务器上的位置
+        String itemRadioFileUrl = podcastLink + "/audio/" + uploadedPodcastName;//上传音频文件在服务器上的位置
         String itemLink = podcastLink + "/" + podcastName+"/"+episode;//link节点的内容为本集的网址，拼写规则：主页网址(link)+"/"+podcastName+"/"+episode
         //上传时间
         SimpleDateFormat sdf3 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
@@ -151,7 +162,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         pubDate.addText(pubDateString);
         guid.addAttribute("isPermaLink", "true").addText(itemLink);
         //需要一个上传的音频文件类型+音频文件url+音频文件长度
-        String itemRadioFileUrl = podcastLink + "/file/audio" + uploadedPodcastName;
+        String itemRadioFileUrl = podcastLink + "/audio/" + uploadedPodcastName;
         enclosure.addAttribute("type", type).addAttribute("length", length).addAttribute("url", itemRadioFileUrl);
         //需要一个音频文件长度 单位：秒
         itunesDuration.addText(duration);

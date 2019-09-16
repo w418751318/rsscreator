@@ -17,8 +17,8 @@ public class RssFileController {
     private static final Logger logger = LoggerFactory.getLogger(QueryPodcastItemFromDBController.class);
     @Autowired
     private RssFeedService rssFeedService;
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = { "application/xml;charset=UTF-8" })
-    public String rssFeed(@RequestParam("podcastName") String podcastName) {
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = { "text/xml;charset=UTF-8" })
+    public String rssFeed(@RequestParam("ep") String podcastName) {
         logger.info("rssfeed");
         return rssFeedService.rssFeed(podcastName);
     }
