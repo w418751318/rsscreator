@@ -22,7 +22,9 @@ public class PodcastItem {
     private String enclosure_url;
     private String duration;
     private String episode;
+    private String season;
     private String podcastname;
+    private String episodeType;
 
 
 
@@ -121,5 +123,21 @@ public class PodcastItem {
 
     public void setPodcastname(String podcastname) {
         this.podcastname = podcastname;
+    }
+
+    public String getSeason() {
+        return season;
+    }
+
+    public void setSeason(String season) {
+        this.season = season;
+    }
+
+    public String getEpisodeType() {
+        return episodeType;
+    }
+
+    public void setEpisodeType(String episodeType) {
+        this.episodeType = episodeType;
     }
 }

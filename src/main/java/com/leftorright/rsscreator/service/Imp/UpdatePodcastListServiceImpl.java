@@ -40,7 +40,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
     private String filePath;
 
     @Override
-    public ServiceResponse updatePodcastList(String podcastName,String uploadedPodcastName, String title, String shownotes, String episode, String duration, String type, String length) {
+    public ServiceResponse updatePodcastList(String podcastName,String uploadedPodcastName, String title, String shownotes, String episode, String duration, String enclosureType, String length,String season,String episodeType) {
         logger.info("uploadedPodcastName-"+uploadedPodcastName+" title-"+title+" shownotes"+shownotes+" episode"+episode);
 
         //直接读取rss文件
@@ -67,14 +67,14 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
             String podcastAuthor = channel.elementText("author");
             String podcastLink = channel.elementText("link");
             //写入数据库
-            Object podcastItem = savePodcastItemToDB(podcastName,podcastLink,podcastAuthor,title, shownotes, uploadedPodcastName, episode, duration, type, length);
+            Object podcastItem = savePodcastItemToDB(podcastName,podcastLink,podcastAuthor,title, shownotes, uploadedPodcastName, episode,duration, enclosureType, length, season, episodeType);
             if (podcastItem instanceof PodcastItem){
                 logger.info("更新播客 "+title+" 成功！");
             }else{
                 return jsonResult(ServiceConstant.STATUS_FAIL, ServiceConstant.MSG_FAIL_UPDATE_DB, "", "", null);
             }
             //创建xml中的item节点
-            Element newItem = createNewItem(podcastName,podcastLink,podcastAuthor,title, shownotes, uploadedPodcastName, episode, duration, type, length);
+            Element newItem = createNewItem(podcastName,podcastLink,podcastAuthor,title, shownotes, uploadedPodcastName, episode,duration, enclosureType, length, season, episodeType);
             //向channel节点中插入item节点
             channel.add(newItem);
 
@@ -105,11 +105,11 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
      * @param uploadedPodcastName
      * @param episode
      * @param duration
-     * @param type
+     * @param enclosureType
      * @param length
      * @return
      */
-    private PodcastItem savePodcastItemToDB(String podcastName,String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String type, String length) {
+    private PodcastItem savePodcastItemToDB(String podcastName,String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length,String season,String episodeType) {
         String itemRadioFileUrl = podcastLink + "/audio/" + uploadedPodcastName;//上传音频文件在服务器上的位置
         String itemLink = podcastLink + "/" + podcastName+"/"+episode;//link节点的内容为本集的网址，拼写规则：主页网址(link)+"/"+podcastName+"/"+episode
         //上传时间
@@ -121,17 +121,20 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         podcastItem.setDescription(shownotes);
         podcastItem.setDuration(duration);
         podcastItem.setEnclosure_length(length);
-        podcastItem.setEnclosure_type(type);
+        podcastItem.setEnclosure_type(enclosureType);
         podcastItem.setEnclosure_url(itemRadioFileUrl);
         podcastItem.setEpisode(episode);
+        podcastItem.setSeason(season);
         podcastItem.setLink(itemLink);
         podcastItem.setPubDate(pubDateString);
         podcastItem.setTitle(title);
         podcastItem.setPodcastname(podcastName);
+        podcastItem.setEpisodeType(episodeType);
+
         return podcastItemRepository.save(podcastItem);
     }
 
-    private Element createNewItem(String podcastName,String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String type, String length) {
+    private Element createNewItem(String podcastName,String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length,String season,String episodeType) {
         //新增加的播客
         Element newItem = DocumentHelper.createElement("item");
 
@@ -145,7 +148,11 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         Element guid = DocumentHelper.createElement("guid");
         Element enclosure = DocumentHelper.createElement("enclosure");
         Element itunesDuration = DocumentHelper.createElement("itunes:duration");
+        Element episodeTypeElement = DocumentHelper.createElement("itunes:episodeType");//full(默认) || trailer || bonus
+        Element itunesSeason = DocumentHelper.createElement("itunes:season");
 
+        episodeTypeElement.addText(episodeType);
+        itunesSeason.addText(season);
         itunesEpisode.addText(episode);
         podcastTitle.addText(title);
         itunesTitle.addText(title);
@@ -163,11 +170,11 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         guid.addAttribute("isPermaLink", "true").addText(itemLink);
         //需要一个上传的音频文件类型+音频文件url+音频文件长度
         String itemRadioFileUrl = podcastLink + "/audio/" + uploadedPodcastName;
-        enclosure.addAttribute("type", type).addAttribute("length", length).addAttribute("url", itemRadioFileUrl);
+        enclosure.addAttribute("type", enclosureType).addAttribute("length", length).addAttribute("url", itemRadioFileUrl);
         //需要一个音频文件长度 单位：秒
         itunesDuration.addText(duration);
 
-        newItem.add(itunesEpisode);
+        newItem.add(itunesSeason);
         newItem.add(podcastTitle);
         newItem.add(itunesTitle);
         newItem.add(description);
@@ -177,6 +184,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         newItem.add(guid);
         newItem.add(enclosure);
         newItem.add(itunesDuration);
+        newItem.add(itunesEpisode);
+        newItem.add(episodeTypeElement);
 
         return newItem;
     }
