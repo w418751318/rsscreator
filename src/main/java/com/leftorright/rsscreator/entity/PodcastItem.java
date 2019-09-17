@@ -27,7 +27,6 @@ public class PodcastItem {
     private String episodeType;
 
 
-
     public Long getId() {
         return id;
     }

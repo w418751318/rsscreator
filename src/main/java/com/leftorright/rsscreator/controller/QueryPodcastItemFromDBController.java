@@ -19,7 +19,7 @@ public class QueryPodcastItemFromDBController {
     private QueryPodcastFromDBService queryPodcastFromDBService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ServiceResponse queryPodcastItemFromDB (@RequestParam("podcastName") String podcastName){
+    public ServiceResponse queryPodcastItemFromDB(@RequestParam("podcastName") String podcastName) {
         return queryPodcastFromDBService.queryPodcastItems(podcastName);
     }
 }

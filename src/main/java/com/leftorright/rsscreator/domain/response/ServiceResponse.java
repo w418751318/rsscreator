@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 /**
  * 服务应答类
  */
-public class ServiceResponse<DATA,ATTACH> {
-    private static Logger logger =  LoggerFactory.getLogger(ServiceResponse.class);
+public class ServiceResponse<DATA, ATTACH> {
+    private static Logger logger = LoggerFactory.getLogger(ServiceResponse.class);
 
     @ApiModelProperty(name = "status", value = "服务请求结果编码", required = true, example = "0000")
     @JsonProperty("status")
@@ -52,6 +52,7 @@ public class ServiceResponse<DATA,ATTACH> {
     public JSONObject getRspData() {
         return rspData;
     }
+
     public void setRspData(JSONObject rspData) {
         this.rspData = rspData;
     }
@@ -71,6 +72,7 @@ public class ServiceResponse<DATA,ATTACH> {
     public void setUsername(String username) {
         this.username = username;
     }
+
     public String[] getPermissions() {
         return permissions;
     }
@@ -78,7 +80,7 @@ public class ServiceResponse<DATA,ATTACH> {
     public void setPermissions(String[] permissions) {
         this.permissions = permissions;
     }
-    
+
     public String getStatus() {
         return status;
     }

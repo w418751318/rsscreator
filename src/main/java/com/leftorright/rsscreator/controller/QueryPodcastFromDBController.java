@@ -18,7 +18,7 @@ public class QueryPodcastFromDBController {
     private QueryPodcastFromDBService queryPodcastFromDBService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ServiceResponse queryPodcastFromDB (){
+    public ServiceResponse queryPodcastFromDB() {
         return queryPodcastFromDBService.queryPodcast();
     }
 

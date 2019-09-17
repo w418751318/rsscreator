@@ -36,7 +36,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
     public ServiceResponse createPodcast(String imageName, String podcastName, String subtitle,
                                          String link, String category, String description,
                                          String keywords, String author, String email) {
-        logger.info("createPodcast:"+imageName+"podcastName:"+ podcastName);
+        logger.info("createPodcast:" + imageName + "podcastName:" + podcastName);
 
         //使用汉字转成的拼音，用作xml文件的名字
         PinyinTool tool = new PinyinTool();
@@ -46,8 +46,8 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
             badHanyuPinyinOutputFormatCombination.printStackTrace();
         }
-        String feed = link+"/feed?ep="+xmlFileName;
-        String imageHref = "https://justpodmedia.com/pic/"+imageName;//更换新
+        String feed = link + "/feed?ep=" + xmlFileName;
+        String imageHref = "https://justpodmedia.com/pic/" + imageName;//更换新
 
         //存入数据库
         PodcastInfo podcastInfo = new PodcastInfo();
@@ -58,11 +58,11 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         podcastInfo.setLink(link);
         podcastInfo.setSubtitle(subtitle);
         podcastInfo.setPodcastname(podcastName);
-        if (podcastInfoRepository.save(podcastInfo) instanceof PodcastInfo){
+        if (podcastInfoRepository.save(podcastInfo) instanceof PodcastInfo) {
             logger.info("写入数据库成功！");
-        }else {
+        } else {
             logger.info("写入数据库失败！");
-            return jsonResult(ServiceConstant.STATUS_DB_ERROR, ServiceConstant.MSG_DB_ERROR, "01","",null);
+            return jsonResult(ServiceConstant.STATUS_DB_ERROR, ServiceConstant.MSG_DB_ERROR, "01", "", null);
         }
 
         /**
@@ -73,26 +73,29 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
 
         // 添加根节点 rss
         Element rss = document.addElement("rss");
-        rss.addAttribute("version","2.0");
-        rss.addNamespace("atom","http://www.w3.org/2005/Atom");
-        rss.addNamespace("itunes","http://www.itunes.com/dtds/podcast-1.0.dtd");
+        rss.addAttribute("version", "2.0");
+        rss.addNamespace("atom", "http://www.w3.org/2005/Atom");
+        rss.addNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
+        rss.addNamespace("content", "http://purl.org/rss/1.0/modules/content/");
 
         // 添加channel节点
-        Element channel= rss.addElement("channel");
+        Element channel = rss.addElement("channel");
         channel.addElement("title").addText(podcastName);
         channel.addElement("itunes:subtitle").addText(subtitle);
         channel.addElement("link").addText(link);
-        channel.addElement("atom:link").addAttribute("href",feed)
-                .addAttribute("rel","self")
-                .addAttribute("type","application/rss+xml");
+        channel.addElement("atom:link").addAttribute("href", feed)
+                .addAttribute("rel", "self")
+                .addAttribute("type", "application/rss+xml");
         channel.addElement("description").addText(description);
+        channel.addElement("itunes:summary").addText(description);
+
         channel.addElement("language").addText("zh-CN");
         channel.addElement("itunes:explicit").addText("false");
         channel.addElement("itunes:keywords").addText(keywords);
         channel.addElement("itunes:author").addText(author);
         channel.addElement("itunes:type").addText("episodic");
-        channel.addElement("itunes:category").addAttribute("text",category);
-        channel.addElement("itunes:image").addAttribute("href",imageHref);
+        channel.addElement("itunes:category").addAttribute("text", category);
+        channel.addElement("itunes:image").addAttribute("href", imageHref);
 
         Element owner = channel.addElement("itunes:owner");
         owner.addElement("itunes:name").addText(podcastName);
@@ -104,26 +107,26 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
 
             OutputFormat format = OutputFormat.createPrettyPrint();
             format.setEncoding("utf-8");
-            XMLWriter writer = new XMLWriter( new FileOutputStream(new File(filePath+xmlFileName+".xml")), format);
+            XMLWriter writer = new XMLWriter(new FileOutputStream(new File(filePath + xmlFileName + ".xml")), format);
 //            XMLWriter writer = new XMLWriter( new FileOutputStream(new File("C:\\Users\\unicom\\Desktop\\rss.xml")), format);
             writer.write(document);
             logger.info("Create rss.xml success!");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "00","",null);
+            return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "00", "", null);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "01","",null);
+            return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "01", "", null);
         } catch (IOException e) {
             e.printStackTrace();
-            return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11","",null);
+            return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "11", "", null);
         }
 
-        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_CREATE, "","",null);
+        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_CREATE, "", "", null);
     }
 
 
-    private static ServiceResponse<Object, Object> jsonResult(String responseCode, String responseMsg, String uid, String username,String[] permissions) {
+    private static ServiceResponse<Object, Object> jsonResult(String responseCode, String responseMsg, String uid, String username, String[] permissions) {
         ServiceResponse serviceResponse = new ServiceResponse();
         serviceResponse.setStatus(responseCode);
         serviceResponse.setMsg(responseMsg);

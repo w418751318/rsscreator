@@ -31,8 +31,8 @@ public class RssFeedServiceImp implements RssFeedService {
         //将podcastName转成拼音
         PinyinTool pinyinTool = new PinyinTool();
         try {
-            String xmlFileName =  pinyinTool.toPinYin(podcastName);
-            document = reader.read(filePath+xmlFileName+".xml");
+            String xmlFileName = pinyinTool.toPinYin(podcastName);
+            document = reader.read(filePath + xmlFileName + ".xml");
         } catch (DocumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class RssFeedServiceImp implements RssFeedService {
         } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
             badHanyuPinyinOutputFormatCombination.printStackTrace();
         }
-        logger.info("document.toString()---"+document.toString());
+        logger.info("document.toString()---" + document.toString());
         return document.asXML();
     }
 }

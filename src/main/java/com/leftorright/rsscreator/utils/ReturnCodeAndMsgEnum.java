@@ -4,7 +4,7 @@ package com.leftorright.rsscreator.utils;
  * @author lanxuewei Create in 2018/7/3 20:06
  * Description: web相关接口返回状态枚举
  */
-public enum  ReturnCodeAndMsgEnum {
+public enum ReturnCodeAndMsgEnum {
     Success(0, "ok"),
     No_Data(-1, "no data"),
     SYSTEM_ERROR(10004, "system error");
@@ -21,7 +21,7 @@ public enum  ReturnCodeAndMsgEnum {
         ReturnCodeAndMsgEnum[] var1 = values();
         int var2 = var1.length;
 
-        for(int var3 = 0; var3 < var2; ++var3) {
+        for (int var3 = 0; var3 < var2; ++var3) {
             ReturnCodeAndMsgEnum aiTypeEnum = var1[var3];
             if (aiTypeEnum.code == code) {
                 return aiTypeEnum;

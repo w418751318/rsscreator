@@ -1,4 +1,5 @@
 package com.leftorright.rsscreator.utils;
+
 import java.io.Serializable;
 
 public class ReturnValue<T> implements Serializable {

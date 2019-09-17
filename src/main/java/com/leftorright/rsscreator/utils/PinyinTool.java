@@ -9,43 +9,45 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 
 /**
  * 汉字转化为拼音的工具类
- * @author liuyazhuang
  *
+ * @author liuyazhuang
  */
 public class PinyinTool {
     HanyuPinyinOutputFormat format = null;
+
     public static enum Type {
         UPPERCASE,              //全部大写
         LOWERCASE,              //全部小写
         FIRSTUPPER              //首字母大写
     }
 
-    public PinyinTool(){
+    public PinyinTool() {
         format = new HanyuPinyinOutputFormat();
         format.setCaseType(HanyuPinyinCaseType.UPPERCASE);
         format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
     }
 
-    public String toPinYin(String str) throws BadHanyuPinyinOutputFormatCombination{
-        return toPinYin(str, "", Type.LOWERCASE).replace(" ","");
+    public String toPinYin(String str) throws BadHanyuPinyinOutputFormatCombination {
+        return toPinYin(str, "", Type.LOWERCASE).replace(" ", "");
     }
 
-    public String toPinYin(String str,String spera) throws BadHanyuPinyinOutputFormatCombination{
+    public String toPinYin(String str, String spera) throws BadHanyuPinyinOutputFormatCombination {
         return toPinYin(str, spera, Type.UPPERCASE);
     }
 
     /**
      * 将str转换成拼音，如果不是汉字或者没有对应的拼音，则不作转换
      * 如： 明天 转换成 MINGTIAN
+     *
      * @param str：要转化的汉字
      * @param spera：转化结果的分割符
      * @return
      * @throws BadHanyuPinyinOutputFormatCombination
      */
     public String toPinYin(String str, String spera, Type type) throws BadHanyuPinyinOutputFormatCombination {
-        if(str == null || str.trim().length()==0)
+        if (str == null || str.trim().length() == 0)
             return "";
-        if(type == Type.UPPERCASE)
+        if (type == Type.UPPERCASE)
             format.setCaseType(HanyuPinyinCaseType.UPPERCASE);
         else
             format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
@@ -53,19 +55,19 @@ public class PinyinTool {
         String py = "";
         String temp = "";
         String[] t;
-        for(int i=0;i<str.length();i++){
+        for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if((int)c <= 128)
+            if ((int) c <= 128)
                 py += c;
-            else{
+            else {
                 t = PinyinHelper.toHanyuPinyinStringArray(c, format);
-                if(t == null)
+                if (t == null)
                     py += c;
-                else{
+                else {
                     temp = t[0];
-                    if(type == Type.FIRSTUPPER)
-                        temp = t[0].toUpperCase().charAt(0)+temp.substring(1);
-                    py += temp+(i==str.length()-1?"":spera);
+                    if (type == Type.FIRSTUPPER)
+                        temp = t[0].toUpperCase().charAt(0) + temp.substring(1);
+                    py += temp + (i == str.length() - 1 ? "" : spera);
                 }
             }
         }

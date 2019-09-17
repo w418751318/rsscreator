@@ -32,7 +32,7 @@ import java.util.TimeZone;
 public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
     private static final Logger logger = LoggerFactory.getLogger(UpdatePodcastListServiceImpl.class);
     @Autowired
-    private PodcastItemRepository podcastItemRepository ;
+    private PodcastItemRepository podcastItemRepository;
 
     //读取配置文件中的配置：输出（读取）rss文件地址
 //    @Value("${management.filePath_dev}")
@@ -40,8 +40,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
     private String filePath;
 
     @Override
-    public ServiceResponse updatePodcastList(String podcastName,String uploadedPodcastName, String title, String shownotes, String episode, String duration, String enclosureType, String length,String season,String episodeType) {
-        logger.info("uploadedPodcastName-"+uploadedPodcastName+" title-"+title+" shownotes"+shownotes+" episode"+episode);
+    public ServiceResponse updatePodcastList(String podcastName, String uploadedPodcastName, String title, String shownotes, String episode, String duration, String enclosureType, String length, String season, String episodeType) {
+        logger.info("uploadedPodcastName-" + uploadedPodcastName + " title-" + title + " shownotes" + shownotes + " episode" + episode);
 
         //直接读取rss文件
 //        String filePath = "/app/file/rss.xml";
@@ -55,7 +55,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
             badHanyuPinyinOutputFormatCombination.printStackTrace();
         }
 
-        File file = new File(filePath+xmlFileName+".xml");
+        File file = new File(filePath + xmlFileName + ".xml");
         SAXReader reader = new SAXReader();
         Document document = null;
         Element rss = null;
@@ -67,14 +67,14 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
             String podcastAuthor = channel.elementText("author");
             String podcastLink = channel.elementText("link");
             //写入数据库
-            Object podcastItem = savePodcastItemToDB(podcastName,podcastLink,podcastAuthor,title, shownotes, uploadedPodcastName, episode,duration, enclosureType, length, season, episodeType);
-            if (podcastItem instanceof PodcastItem){
-                logger.info("更新播客 "+title+" 成功！");
-            }else{
+            Object podcastItem = savePodcastItemToDB(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType);
+            if (podcastItem instanceof PodcastItem) {
+                logger.info("更新播客 " + title + " 成功！");
+            } else {
                 return jsonResult(ServiceConstant.STATUS_FAIL, ServiceConstant.MSG_FAIL_UPDATE_DB, "", "", null);
             }
             //创建xml中的item节点
-            Element newItem = createNewItem(podcastName,podcastLink,podcastAuthor,title, shownotes, uploadedPodcastName, episode,duration, enclosureType, length, season, episodeType);
+            Element newItem = createNewItem(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType);
             //向channel节点中插入item节点
             channel.add(newItem);
 
@@ -98,6 +98,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
 
     /**
      * 保存本集播客相关信息到数据库表：tb_podcastitem
+     *
      * @param podcastLink
      * @param podcastAuthor
      * @param title
@@ -109,9 +110,9 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
      * @param length
      * @return
      */
-    private PodcastItem savePodcastItemToDB(String podcastName,String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length,String season,String episodeType) {
+    private PodcastItem savePodcastItemToDB(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length, String season, String episodeType) {
         String itemRadioFileUrl = podcastLink + "/audio/" + uploadedPodcastName;//上传音频文件在服务器上的位置
-        String itemLink = podcastLink + "/" + podcastName+"/"+episode;//link节点的内容为本集的网址，拼写规则：主页网址(link)+"/"+podcastName+"/"+episode
+        String itemLink = podcastLink + "/" + podcastName + "/" + episode;//link节点的内容为本集的网址，拼写规则：主页网址(link)+"/"+podcastName+"/"+episode
         //上传时间
         SimpleDateFormat sdf3 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         sdf3.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -134,7 +135,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         return podcastItemRepository.save(podcastItem);
     }
 
-    private Element createNewItem(String podcastName,String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length,String season,String episodeType) {
+    private Element createNewItem(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length, String season, String episodeType) {
         //新增加的播客
         Element newItem = DocumentHelper.createElement("item");
 
@@ -142,6 +143,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         Element podcastTitle = DocumentHelper.createElement("title");
         Element itunesTitle = DocumentHelper.createElement("itunes:title");
         Element description = DocumentHelper.createElement("description");
+        Element contentEncoded = DocumentHelper.createElement("content:encoded");
+        Element itunesSummary = DocumentHelper.createElement("itunes:summary");
         Element link = DocumentHelper.createElement("link");
         Element author = DocumentHelper.createElement("author");
         Element pubDate = DocumentHelper.createElement("pubDate");
@@ -156,9 +159,13 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         itunesEpisode.addText(episode);
         podcastTitle.addText(title);
         itunesTitle.addText(title);
-        description.addText(shownotes);
+
+        description.addCDATA(shownotes);
+        contentEncoded.addCDATA(shownotes);
+        itunesSummary.addCDATA(shownotes);
+
         //需要一个link的内容
-        String itemLink = podcastLink + "/" + podcastName+"/"+episode;
+        String itemLink = podcastLink + "/" + podcastName + "/" + episode;
         link.addText(itemLink);
         //需要一个author的内容
         author.addText(podcastAuthor);
@@ -186,6 +193,10 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         newItem.add(itunesDuration);
         newItem.add(itunesEpisode);
         newItem.add(episodeTypeElement);
+
+        newItem.add(contentEncoded);
+        newItem.add(itunesSummary);
+
 
         return newItem;
     }

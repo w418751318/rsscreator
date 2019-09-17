@@ -15,16 +15,18 @@ public class FileAcceptController {
 
     @Autowired
     private UploadFileService uploadFileService;
+
     //上传图片接口：ip:port/managepodcast/uploadpic
-    @RequestMapping(value = "/uploadpic",method = RequestMethod.POST)
-    public String upLoadPic(MultipartFile uploadFile){
+    @RequestMapping(value = "/uploadpic", method = RequestMethod.POST)
+    public String upLoadPic(MultipartFile uploadFile) {
         String fileType = "pic";
-        return uploadFileService.uploadFile(uploadFile,fileType);
+        return uploadFileService.uploadFile(uploadFile, fileType);
     }
+
     //上传音频接口：ip:port/managepodcast/uploadpic
-    @RequestMapping(value = "/uploadaudio",method = RequestMethod.POST)
-    public String upLoadAudio(MultipartFile uploadFile){
+    @RequestMapping(value = "/uploadaudio", method = RequestMethod.POST)
+    public String upLoadAudio(MultipartFile uploadFile) {
         String fileType = "audio";
-        return uploadFileService.uploadFile(uploadFile,fileType);
+        return uploadFileService.uploadFile(uploadFile, fileType);
     }
 }

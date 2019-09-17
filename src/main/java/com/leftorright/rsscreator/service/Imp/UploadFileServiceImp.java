@@ -24,20 +24,20 @@ public class UploadFileServiceImp implements UploadFileService {
     private static final Logger logger = LoggerFactory.getLogger(UploadFileServiceImp.class);
 
     @Override
-    public String uploadFile(MultipartFile zipFile,String fileType) {
+    public String uploadFile(MultipartFile zipFile, String fileType) {
         String targetFilePath = "/app/file/";
         String duration = "";
 //        String targetFilePath = "C:\\Users\\unicom\\Desktop\\";
-        if(zipFile != null){
+        if (zipFile != null) {
             String fileName = zipFile.getOriginalFilename();
-            File targetFile = new File(targetFilePath + File.separator + fileType+File.separator+fileName);
+            File targetFile = new File(targetFilePath + File.separator + fileType + File.separator + fileName);
             FileOutputStream fileOutputStream = null;
             try {
                 fileOutputStream = new FileOutputStream(targetFile);
                 IOUtils.copy(zipFile.getInputStream(), fileOutputStream);
                 logger.info("------>>>>>>uploaded a file successfully!<<<<<<------");
             } catch (IOException e) {
-                logger.info("------>>>>>>uploaded a file IOException!<<<<<<------"+e.toString());
+                logger.info("------>>>>>>uploaded a file IOException!<<<<<<------" + e.toString());
 //            return new ReturnValue<>(-1, null);
                 return "upload file fail!";
             } finally {
@@ -51,17 +51,17 @@ public class UploadFileServiceImp implements UploadFileService {
             try {
                 //获取音频文件时长
                 MP3File f = (MP3File) AudioFileIO.read(targetFile);
-                MP3AudioHeader audioHeader = (MP3AudioHeader)f.getAudioHeader();
-                duration =  audioHeader.getTrackLength()+"";
-                logger.info("duration:"+duration);
-            } catch(Exception e) {
+                MP3AudioHeader audioHeader = (MP3AudioHeader) f.getAudioHeader();
+                duration = audioHeader.getTrackLength() + "";
+                logger.info("duration:" + duration);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             JSONObject uploadReturn = new JSONObject();
-            uploadReturn.put("fileName",fileName);
-            uploadReturn.put("duration",duration);
+            uploadReturn.put("fileName", fileName);
+            uploadReturn.put("duration", duration);
             return uploadReturn.toString();
-        }else {
+        } else {
             return "upload file fail!(uploadfile == null)";
         }
 

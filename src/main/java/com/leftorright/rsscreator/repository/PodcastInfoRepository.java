@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface PodcastInfoRepository extends CrudRepository<PodcastInfo,Integer> {
+public interface PodcastInfoRepository extends CrudRepository<PodcastInfo, Integer> {
     List<PodcastInfo> findAll();
 }

@@ -38,7 +38,7 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         if (podcastList.size() > 0) {
             String[] podcastNames = new String[podcastList.size()];//存放播客名字的数组
             //循环取出podcastList中的所有播客的名字
-            for (int i = 0;i<podcastList.size();i++){
+            for (int i = 0; i < podcastList.size(); i++) {
                 podcastNames[i] = podcastList.get(i).getPodcastname();
 //                logger.info("podcastList.get(i).getPodcastname() " + podcastList.get(i).getPodcastname());
             }
@@ -46,9 +46,9 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
             logger.info("podcastInfoJSONObject: " + podcastInfoJSONObject.toJSONString());
         } else {
             logger.info("数据库中没有播客的数据");
-            return jsonResult(ServiceConstant.STATUS_QUERY_FAIL, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null,null);
+            return jsonResult(ServiceConstant.STATUS_QUERY_FAIL, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null, null);
         }
-        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject,null);
+        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject, null);
     }
 
     @Override
@@ -69,27 +69,27 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         if (podcastItemList.size() > 0) {
             for (PodcastItem podcastItem : podcastItemList) {
                 JSONObject podcastItemJSONObject = new JSONObject();
-                podcastItemJSONObject.put("key",podcastItem.getEpisode());//此处key用于前端展示
-                podcastItemJSONObject.put("episodename",podcastItem.getTitle());//此处episodename用于前端展示
+                podcastItemJSONObject.put("key", podcastItem.getEpisode());//此处key用于前端展示
+                podcastItemJSONObject.put("episodename", podcastItem.getTitle());//此处episodename用于前端展示
                 Date date = new Date(podcastItem.getPubDate());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                podcastItemJSONObject.put("date",simpleDateFormat.format(date));//此处date用于前端展示
+                podcastItemJSONObject.put("date", simpleDateFormat.format(date));//此处date用于前端展示
                 int totalTime = Integer.parseInt(podcastItem.getDuration());
-                String totalTimeStr = totalTime/3600 > 0 ? totalTime/3600+"时" + (totalTime%3600)/60 + "分" + (totalTime%3600)%60 + "秒":(totalTime%3600)/60 + "分" + (totalTime%3600)%60 + "秒";
-                podcastItemJSONObject.put("length",totalTimeStr);//此处date用于前端展示
+                String totalTimeStr = totalTime / 3600 > 0 ? totalTime / 3600 + "时" + (totalTime % 3600) / 60 + "分" + (totalTime % 3600) % 60 + "秒" : (totalTime % 3600) / 60 + "分" + (totalTime % 3600) % 60 + "秒";
+                podcastItemJSONObject.put("length", totalTimeStr);//此处date用于前端展示
                 podcastItemJSONArray.add(podcastItemJSONObject);
             }
             //本播客feed地址
-            String feedStr = "https://justpodmedia.com/feed?ep="+xmlFileName;
-            podcastInfoJSONObject.put("feed",feedStr);
+            String feedStr = "https://justpodmedia.com/feed?ep=" + xmlFileName;
+            podcastInfoJSONObject.put("feed", feedStr);
         } else {
             logger.info("数据库中没有播客item的数据");
-            return jsonResult(ServiceConstant.STATUS_QUERY_FAIL_ITEM, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null,null);
+            return jsonResult(ServiceConstant.STATUS_QUERY_FAIL_ITEM, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null, null);
         }
-        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject,podcastItemJSONArray);
+        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject, podcastItemJSONArray);
     }
 
-    private static ServiceResponse<Object, Object> jsonResult(String responseCode, String responseMsg, String uid, String username, String[] permissions, JSONObject podcastInfoJSONObject,JSONArray podcastItemJSONArray) {
+    private static ServiceResponse<Object, Object> jsonResult(String responseCode, String responseMsg, String uid, String username, String[] permissions, JSONObject podcastInfoJSONObject, JSONArray podcastItemJSONArray) {
         ServiceResponse serviceResponse = new ServiceResponse();
         serviceResponse.setStatus(responseCode);
         serviceResponse.setMsg(responseMsg);
