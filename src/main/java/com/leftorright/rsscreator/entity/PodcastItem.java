@@ -10,7 +10,7 @@ public class PodcastItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id; // 主键ID
+    private Integer id; // 主键ID
 
     private String title;
     private String description;
@@ -27,11 +27,11 @@ public class PodcastItem {
     private String episodeType;
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

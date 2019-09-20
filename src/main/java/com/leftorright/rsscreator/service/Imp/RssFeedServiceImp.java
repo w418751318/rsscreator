@@ -25,22 +25,30 @@ public class RssFeedServiceImp implements RssFeedService {
     private String filePath;
 
     @Override
-    public String rssFeed(String podcastName) {
+    public String rssFeed(String feedname) {
         SAXReader reader = new SAXReader();
         Document document = null;
+
         //将podcastName转成拼音
-        PinyinTool pinyinTool = new PinyinTool();
+//        PinyinTool pinyinTool = new PinyinTool();
+//        try {
+//            String xmlFileName = pinyinTool.toPinYin(podcastName);
+//            document = reader.read(filePath + xmlFileName + ".xml");
+//        } catch (DocumentException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//            return null;//当输入的rss地址不合法：rss文件不存在时，返回null
+//        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+//            badHanyuPinyinOutputFormatCombination.printStackTrace();
+//        }
+
+
         try {
-            String xmlFileName = pinyinTool.toPinYin(podcastName);
-            document = reader.read(filePath + xmlFileName + ".xml");
+            document = reader.read(filePath + feedname + ".xml");
         } catch (DocumentException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;//当输入的rss地址不合法：rss文件不存在时，返回null
-        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
-            badHanyuPinyinOutputFormatCombination.printStackTrace();
         }
-        logger.info("document.toString()---" + document.toString());
+
         return document.asXML();
     }
 }

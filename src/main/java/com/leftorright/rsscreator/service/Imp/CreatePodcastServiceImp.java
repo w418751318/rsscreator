@@ -35,18 +35,20 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
     @Override
     public ServiceResponse createPodcast(String imageName, String podcastName, String subtitle,
                                          String link, String category, String description,
-                                         String keywords, String author, String email) {
+                                         String keywords, String author, String email, String feedname) {
         logger.info("createPodcast:" + imageName + "podcastName:" + podcastName);
 
         //使用汉字转成的拼音，用作xml文件的名字
-        PinyinTool tool = new PinyinTool();
-        String xmlFileName = null;
-        try {
-            xmlFileName = tool.toPinYin(podcastName);
-        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
-            badHanyuPinyinOutputFormatCombination.printStackTrace();
-        }
-        String feed = link + "/feed?ep=" + xmlFileName;
+//        PinyinTool tool = new PinyinTool();
+//        String xmlFileName = null;
+//        try {
+//            xmlFileName = tool.toPinYin(podcastName);
+//        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+//            badHanyuPinyinOutputFormatCombination.printStackTrace();
+//        }
+//        String feed = link + "/feed?ep=" + xmlFileName;
+
+        String feed = link + "/feed?ep=" + feedname;
         String imageHref = "https://justpodmedia.com/pic/" + imageName;//更换新
 
         //存入数据库
@@ -58,6 +60,8 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         podcastInfo.setLink(link);
         podcastInfo.setSubtitle(subtitle);
         podcastInfo.setPodcastname(podcastName);
+        podcastInfo.setFeedname(feedname);
+
         if (podcastInfoRepository.save(podcastInfo) instanceof PodcastInfo) {
             logger.info("写入数据库成功！");
         } else {
@@ -107,7 +111,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
 
             OutputFormat format = OutputFormat.createPrettyPrint();
             format.setEncoding("utf-8");
-            XMLWriter writer = new XMLWriter(new FileOutputStream(new File(filePath + xmlFileName + ".xml")), format);
+            XMLWriter writer = new XMLWriter(new FileOutputStream(new File(filePath + feedname + ".xml")), format);
 //            XMLWriter writer = new XMLWriter( new FileOutputStream(new File("C:\\Users\\unicom\\Desktop\\rss.xml")), format);
             writer.write(document);
             logger.info("Create rss.xml success!");

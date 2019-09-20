@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class CreatePodcastController {
     private static final Logger logger = LoggerFactory.getLogger(CreatePodcastController.class);
 
-    String imageName, title, subtitle, link, category, description, keywords, author, email;
 
     @Autowired
     private CreatePodcastService createPodcastService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public ServiceResponse<Object, Object> createPodcast(@RequestParam("imageName") String imageName,
                                                          @RequestParam("title") String title,
                                                          @RequestParam("subtitle") String subtitle,
@@ -29,7 +28,9 @@ public class CreatePodcastController {
                                                          @RequestParam("description") String description,
                                                          @RequestParam("keywords") String keywords,
                                                          @RequestParam("author") String author,
-                                                         @RequestParam("email") String email) {
-        return createPodcastService.createPodcast(imageName, title, subtitle, link, category, description, keywords, author, email);
+                                                         @RequestParam("email") String email,
+                                                         @RequestParam("feedname") String feedname) {
+
+        return createPodcastService.createPodcast(imageName, title, subtitle, link, category, description, keywords, author, email,feedname);
     }
 }

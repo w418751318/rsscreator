@@ -20,6 +20,7 @@ public class PodcastInfo {
     private String image;
     private String email;
     private String podcastname;
+    private String feedname;
 
     public Long getId() {
         return id;
@@ -84,5 +85,13 @@ public class PodcastInfo {
 
     public void setPodcastname(String podcastname) {
         this.podcastname = podcastname;
+    }
+
+    public String getFeedname() {
+        return feedname;
+    }
+
+    public void setFeedname(String feedname) {
+        this.feedname = feedname;
     }
 }

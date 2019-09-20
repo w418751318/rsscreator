@@ -19,8 +19,7 @@ public class RssFileController {
     private RssFeedService rssFeedService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = {"text/xml;charset=UTF-8"})
-    public String rssFeed(@RequestParam("ep") String podcastName) {
-        logger.info("rssfeed");
-        return rssFeedService.rssFeed(podcastName);
+    public String rssFeed(@RequestParam("ep") String feedname) {
+        return rssFeedService.rssFeed(feedname);
     }
 }

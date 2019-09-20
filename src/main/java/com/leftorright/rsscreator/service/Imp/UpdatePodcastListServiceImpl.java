@@ -40,22 +40,22 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
     private String filePath;
 
     @Override
-    public ServiceResponse updatePodcastList(String podcastName, String uploadedPodcastName, String title, String shownotes, String episode, String duration, String enclosureType, String length, String season, String episodeType) {
-        logger.info("uploadedPodcastName-" + uploadedPodcastName + " title-" + title + " shownotes" + shownotes + " episode" + episode);
+    public ServiceResponse updatePodcastList(String podcastName, String uploadedPodcastName, String title, String shownotes, String episode, String duration, String enclosureType, String length, String season, String episodeType,String feedStr) {
+//        logger.info("uploadedPodcastName-" + uploadedPodcastName + " title-" + title + " shownotes" + shownotes + " episode" + episode);
 
         //直接读取rss文件
 //        String filePath = "/app/file/rss.xml";
 //        String filePath = "/Users/zhuyikun/Desktop/rss.xml";
         //使用汉字转成的拼音，用作xml文件的名字
-        PinyinTool tool = new PinyinTool();
-        String xmlFileName = null;
-        try {
-            xmlFileName = tool.toPinYin(podcastName);
-        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
-            badHanyuPinyinOutputFormatCombination.printStackTrace();
-        }
+//        PinyinTool tool = new PinyinTool();
+//        String xmlFileName = null;
+//        try {
+//            xmlFileName = tool.toPinYin(podcastName);
+//        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+//            badHanyuPinyinOutputFormatCombination.printStackTrace();
+//        }
 
-        File file = new File(filePath + xmlFileName + ".xml");
+        File file = new File(filePath + feedStr + ".xml");
         SAXReader reader = new SAXReader();
         Document document = null;
         Element rss = null;
@@ -77,9 +77,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
             Element newItem = createNewItem(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType);
             //向channel节点中插入item节点
             channel.add(newItem);
-
-            XMLWriter writer = new XMLWriter(new FileWriter(file));
             //写入数据
+            XMLWriter writer = new XMLWriter(new FileWriter(file));
             writer.write(document);
             writer.close();
         } catch (DocumentException e) {

@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
@@ -30,19 +32,45 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
     @Autowired
     private PodcastItemRepository podcastItemRepository;
 
+    /**
+     * 根据podcastname查询podcast的信息
+     *
+     * @param podcastName
+     * @return
+     */
+    @Override
+    public ServiceResponse queryPodcastFeed(String podcastName) {
+        //根据podcastName从数据库中捞取播客信息，主要用于feed展示
+        PodcastInfo podcastInfo = podcastInfoRepository.findPodcastInfoByPodcastname(podcastName);
+        if (podcastInfo != null) {
+            JSONObject podcastInfoJSONObject = new JSONObject();
+            podcastInfoJSONObject.put("feedname", podcastInfo.getFeedname());
+            return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject, null);
+        } else {
+            return jsonResult(ServiceConstant.STATUS_QUERY_FAIL, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null, null);
+        }
+    }
+
     @Override
     public ServiceResponse queryPodcast() {
+
         //查询数据库
         List<PodcastInfo> podcastList = podcastInfoRepository.findAll();
         JSONObject podcastInfoJSONObject = new JSONObject();
         if (podcastList.size() > 0) {
             String[] podcastNames = new String[podcastList.size()];//存放播客名字的数组
+            //存放podcastname和podcastfeed的键值对
+            Map<String, String > podcastFeedsMap = new HashMap<>();
+
             //循环取出podcastList中的所有播客的名字
             for (int i = 0; i < podcastList.size(); i++) {
-                podcastNames[i] = podcastList.get(i).getPodcastname();
-//                logger.info("podcastList.get(i).getPodcastname() " + podcastList.get(i).getPodcastname());
+                String podcastName = podcastList.get(i).getPodcastname();
+                String feed = podcastList.get(i).getFeedname();
+                podcastNames[i] = podcastName;
+                podcastFeedsMap.put(podcastName,feed);
             }
             podcastInfoJSONObject.put("podcastList", podcastNames);//将存放播客列表的数组放到JSONObject中{"podcastList":["无聊斋"，"ridehome"]}
+            podcastInfoJSONObject.put("feeds",podcastFeedsMap);
             logger.info("podcastInfoJSONObject: " + podcastInfoJSONObject.toJSONString());
         } else {
             logger.info("数据库中没有播客的数据");
@@ -51,16 +79,17 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject, null);
     }
 
+
     @Override
     public ServiceResponse queryPodcastItems(String podcastName) {
         //使用汉字转成的拼音，用作xml文件的名字
         PinyinTool tool = new PinyinTool();
-        String xmlFileName = null;
-        try {
-            xmlFileName = tool.toPinYin(podcastName);
-        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
-            badHanyuPinyinOutputFormatCombination.printStackTrace();
-        }
+//        String xmlFileName = null;
+//        try {
+//            xmlFileName = tool.toPinYin(podcastName);
+//        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+//            badHanyuPinyinOutputFormatCombination.printStackTrace();
+//        }
 
         //查询数据库 items
         List<PodcastItem> podcastItemList = podcastItemRepository.findPodcastItemByPodcastname(podcastName);
@@ -69,19 +98,32 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         if (podcastItemList.size() > 0) {
             for (PodcastItem podcastItem : podcastItemList) {
                 JSONObject podcastItemJSONObject = new JSONObject();
-                podcastItemJSONObject.put("key", podcastItem.getEpisode());//此处key用于前端展示
-                podcastItemJSONObject.put("episodename", podcastItem.getTitle());//此处episodename用于前端展示
+                /**
+                 * 前端展示内容：eg:
+                 * key: '1',
+                 * episodename: '王俊煜：迟早大家不会再装APP',
+                 * shownotes:"这里是shownotes",
+                 * pubdate: '2019-09-16 11:47:56',
+                 * season: '9',
+                 * episode: '1',
+                 * type: 'full',
+                 * podcastname:'忽左忽右'
+                 */
+                podcastItemJSONObject.put("key", podcastItem.getId());
+                podcastItemJSONObject.put("episodename", podcastItem.getTitle());
+                podcastItemJSONObject.put("shownotes", podcastItem.getDescription());
                 Date date = new Date(podcastItem.getPubDate());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                podcastItemJSONObject.put("date", simpleDateFormat.format(date));//此处date用于前端展示
-                int totalTime = Integer.parseInt(podcastItem.getDuration());
-                String totalTimeStr = totalTime / 3600 > 0 ? totalTime / 3600 + "时" + (totalTime % 3600) / 60 + "分" + (totalTime % 3600) % 60 + "秒" : (totalTime % 3600) / 60 + "分" + (totalTime % 3600) % 60 + "秒";
-                podcastItemJSONObject.put("length", totalTimeStr);//此处date用于前端展示
+                podcastItemJSONObject.put("pubdate", simpleDateFormat.format(date));//此处date用于前端展示
+                podcastItemJSONObject.put("season", podcastItem.getSeason());
+                podcastItemJSONObject.put("episode", podcastItem.getEpisode());
+                podcastItemJSONObject.put("type", podcastItem.getEpisodeType());
+                podcastItemJSONObject.put("podcastname", podcastItem.getPodcastname());
                 podcastItemJSONArray.add(podcastItemJSONObject);
             }
             //本播客feed地址
-            String feedStr = "https://justpodmedia.com/feed?ep=" + xmlFileName;
-            podcastInfoJSONObject.put("feed", feedStr);
+//            String feedStr = "https://justpodmedia.com/feed?ep=" + xmlFileName;
+//            podcastInfoJSONObject.put("feed", feedStr);
         } else {
             logger.info("数据库中没有播客item的数据");
             return jsonResult(ServiceConstant.STATUS_QUERY_FAIL_ITEM, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null, null);
