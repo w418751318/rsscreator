@@ -24,13 +24,14 @@ public class CreatePodcastController {
                                                          @RequestParam("title") String title,
                                                          @RequestParam("subtitle") String subtitle,
                                                          @RequestParam("link") String link,
-                                                         @RequestParam("category") String category,
+                                                         @RequestParam("firstCategoryCode") String firstCategoryCode,
+                                                         @RequestParam("secondCategoryCode") String secondCategoryCode,
                                                          @RequestParam("description") String description,
                                                          @RequestParam("keywords") String keywords,
                                                          @RequestParam("author") String author,
                                                          @RequestParam("email") String email,
                                                          @RequestParam("feedname") String feedname) {
 
-        return createPodcastService.createPodcast(imageName, title, subtitle, link, category, description, keywords, author, email,feedname);
+        return createPodcastService.createPodcast(imageName, title, subtitle, link, firstCategoryCode, secondCategoryCode, description, keywords, author, email, feedname);
     }
 }

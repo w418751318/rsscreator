@@ -34,7 +34,7 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
 
     @Override
     public ServiceResponse createPodcast(String imageName, String podcastName, String subtitle,
-                                         String link, String category, String description,
+                                         String link, String firstCategoryCode, String secondCategoryCode, String description,
                                          String keywords, String author, String email, String feedname) {
         logger.info("createPodcast:" + imageName + "podcastName:" + podcastName);
 
@@ -94,11 +94,17 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         channel.addElement("itunes:summary").addText(description);
 
         channel.addElement("language").addText("zh-CN");
+        channel.addElement("copyright").addText("&#169; 2019 JustPod");
         channel.addElement("itunes:explicit").addText("false");
         channel.addElement("itunes:keywords").addText(keywords);
         channel.addElement("itunes:author").addText(author);
         channel.addElement("itunes:type").addText("episodic");
-        channel.addElement("itunes:category").addAttribute("text", category);
+        Element categoryElement = channel.addElement("itunes:category");
+        categoryElement.addAttribute("text", firstCategoryCode);
+        //分类可能没有二级分类
+        if (!secondCategoryCode.equals("null")){
+            categoryElement.addElement("itunes:category").addAttribute("text", secondCategoryCode);
+        }
         channel.addElement("itunes:image").addAttribute("href", imageHref);
 
         Element owner = channel.addElement("itunes:owner");

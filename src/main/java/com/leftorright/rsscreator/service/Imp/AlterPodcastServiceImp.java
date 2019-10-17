@@ -2,14 +2,11 @@ package com.leftorright.rsscreator.service.Imp;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.leftorright.rsscreator.controller.AlterPodcastController;
 import com.leftorright.rsscreator.domain.response.ServiceConstant;
 import com.leftorright.rsscreator.domain.response.ServiceResponse;
 import com.leftorright.rsscreator.entity.PodcastItem;
 import com.leftorright.rsscreator.repository.PodcastItemRepository;
 import com.leftorright.rsscreator.service.AlterPodcastService;
-import com.leftorright.rsscreator.utils.PinyinTool;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -39,17 +36,7 @@ public class AlterPodcastServiceImp implements AlterPodcastService {
     private String filePath;
 
     @Override
-    public ServiceResponse alterPodcastItem(String id, String podcastname, String season, String episode, String newdata, String feedStr) {
-        //根据播客名，season，episode定位到指定播客
-//        filePath = "/Users/zhuyikun/";
-        // step 1 ：修改xml
-//        PinyinTool tool = new PinyinTool();
-//        String xmlFileName = null;
-//        try {
-//            xmlFileName = tool.toPinYin(podcastname);
-//        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
-//            badHanyuPinyinOutputFormatCombination.printStackTrace();
-//        }
+    public ServiceResponse alterPodcastItem(String id, String podcastname, String newdata, String feedStr) {
 
         File file = new File(filePath + feedStr + ".xml");
         SAXReader reader = new SAXReader();
@@ -61,10 +48,13 @@ public class AlterPodcastServiceImp implements AlterPodcastService {
 
             List<Element> listElement = rss.element("channel").selectNodes("//item");//所有channel子节点item的list
             for (Element e : listElement) {//遍历所有一级子节点
-                logger.info("listElement.e=" + e.asXML());
-                logger.info("season=" + e.elementText("season"));
-                //根据season和episode进行定位
-                if (e.elementText("season").equals(season) && e.elementText("episode").equals(episode)) {
+//                logger.info("listElement.e=" + e.asXML());
+//                logger.info("season=" + e.elementText("season"));
+//                   logger.info("title " + e.elementText("title"));
+//                   logger.info("podcastname " + podcastname);
+
+                //根据单集播客的标题进行定位
+                if (e.elementText("title").equals(podcastname)) {
 
                     JSONObject newdataJSONObject = JSON.parseObject(newdata);
                     String newTitle = newdataJSONObject.get("episodename").toString();
