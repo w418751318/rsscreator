@@ -61,6 +61,9 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         podcastInfo.setSubtitle(subtitle);
         podcastInfo.setPodcastname(podcastName);
         podcastInfo.setFeedname(feedname);
+        podcastInfo.setKeywords(keywords);
+        podcastInfo.setFirstcategorycode(firstCategoryCode);
+        podcastInfo.setSecondategorycode(secondCategoryCode);
 
         if (podcastInfoRepository.save(podcastInfo) instanceof PodcastInfo) {
             logger.info("写入数据库成功！");

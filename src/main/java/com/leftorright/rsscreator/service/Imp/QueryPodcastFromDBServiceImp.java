@@ -2,7 +2,7 @@ package com.leftorright.rsscreator.service.Imp;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.leftorright.rsscreator.controller.QueryPodcastFromDBController;
+import com.leftorright.rsscreator.domain.response.BaseResponse;
 import com.leftorright.rsscreator.domain.response.ServiceConstant;
 import com.leftorright.rsscreator.domain.response.ServiceResponse;
 import com.leftorright.rsscreator.entity.PodcastInfo;
@@ -10,8 +10,6 @@ import com.leftorright.rsscreator.entity.PodcastItem;
 import com.leftorright.rsscreator.repository.PodcastInfoRepository;
 import com.leftorright.rsscreator.repository.PodcastItemRepository;
 import com.leftorright.rsscreator.service.QueryPodcastFromDBService;
-import com.leftorright.rsscreator.utils.PinyinTool;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,24 +30,6 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
     @Autowired
     private PodcastItemRepository podcastItemRepository;
 
-    /**
-     * 根据podcastname查询podcast的信息
-     *
-     * @param podcastName
-     * @return
-     */
-    @Override
-    public ServiceResponse queryPodcastFeed(String podcastName) {
-        //根据podcastName从数据库中捞取播客信息，主要用于feed展示
-        PodcastInfo podcastInfo = podcastInfoRepository.findPodcastInfoByPodcastname(podcastName);
-        if (podcastInfo != null) {
-            JSONObject podcastInfoJSONObject = new JSONObject();
-            podcastInfoJSONObject.put("feedname", podcastInfo.getFeedname());
-            return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject, null);
-        } else {
-            return jsonResult(ServiceConstant.STATUS_QUERY_FAIL, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null, null);
-        }
-    }
 
     @Override
     public ServiceResponse queryPodcast() {
@@ -79,11 +59,39 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject, null);
     }
 
+    /**
+     * 查询播客信息，eg：播客名，播客简介，作者
+     * @param podcastName
+     * @return
+     */
+    @Override
+    public BaseResponse queryPodcastInfo(String podcastName) {
+        PodcastInfo podcastInfo = podcastInfoRepository.findPodcastInfoByPodcastname(podcastName);
+        if (podcastInfo != null) {
+            JSONObject podcastInfoJSONObject = new JSONObject();
+            podcastInfoJSONObject.put("podcastname", podcastInfo.getPodcastname());
+            podcastInfoJSONObject.put("subtitle", podcastInfo.getSubtitle());
+            podcastInfoJSONObject.put("link", podcastInfo.getLink());
+            podcastInfoJSONObject.put("description", podcastInfo.getDescription());
+            podcastInfoJSONObject.put("author", podcastInfo.getAuthor());
+            podcastInfoJSONObject.put("image", podcastInfo.getImage());
+            podcastInfoJSONObject.put("email", podcastInfo.getEmail());
+            podcastInfoJSONObject.put("feedname", podcastInfo.getFeedname());
+            podcastInfoJSONObject.put("keywords", podcastInfo.getKeywords());
+            podcastInfoJSONObject.put("firstCategoryCode", podcastInfo.getFirstcategorycode());
+            podcastInfoJSONObject.put("secondCategoryCode", podcastInfo.getSecondategorycode());
+            return podcastInfojsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, podcastInfoJSONObject);
+        } else {
+            return podcastInfojsonResult(ServiceConstant.STATUS_QUERY_FAIL, ServiceConstant.MSG_FAIL_QUERY,  null);
+        }
+
+    }
+
 
     @Override
     public ServiceResponse queryPodcastItems(String podcastName) {
         //使用汉字转成的拼音，用作xml文件的名字
-        PinyinTool tool = new PinyinTool();
+//        PinyinTool tool = new PinyinTool();
 //        String xmlFileName = null;
 //        try {
 //            xmlFileName = tool.toPinYin(podcastName);
@@ -140,6 +148,13 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         serviceResponse.setPermissions(permissions);
         serviceResponse.setRspData(podcastInfoJSONObject);
         serviceResponse.setRspDataArray(podcastItemJSONArray);
+        return serviceResponse;
+    }
+    private static BaseResponse<Object, Object> podcastInfojsonResult(String responseCode, String responseMsg, JSONObject podcastInfoJSONObject) {
+        BaseResponse serviceResponse = new BaseResponse();
+        serviceResponse.setStatus(responseCode);
+        serviceResponse.setMsg(responseMsg);
+        serviceResponse.setRspData(podcastInfoJSONObject);
         return serviceResponse;
     }
 }

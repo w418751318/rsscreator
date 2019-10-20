@@ -22,6 +22,11 @@ public class PodcastInfo {
     private String podcastname;
     private String feedname;
 
+    private String keywords;
+    private String firstcategorycode;
+    private String secondategorycode;
+
+
     public Long getId() {
         return id;
     }
@@ -93,5 +98,33 @@ public class PodcastInfo {
 
     public void setFeedname(String feedname) {
         this.feedname = feedname;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getFirstcategorycode() {
+        return firstcategorycode;
+    }
+
+    public void setFirstcategorycode(String firstcategorycode) {
+        this.firstcategorycode = firstcategorycode;
+    }
+
+    public String getSecondategorycode() {
+        return secondategorycode;
+    }
+
+    public void setSecondategorycode(String secondategorycode) {
+        this.secondategorycode = secondategorycode;
     }
 }

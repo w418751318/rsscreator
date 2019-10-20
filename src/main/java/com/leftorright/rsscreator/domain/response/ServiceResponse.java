@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 服务应答类
  */
-public class ServiceResponse<DATA, ATTACH> {
+public class ServiceResponse<DATA, ATTACH> extends BaseResponse {
     private static Logger logger = LoggerFactory.getLogger(ServiceResponse.class);
 
     @ApiModelProperty(name = "status", value = "服务请求结果编码", required = true, example = "0000")
