@@ -11,7 +11,7 @@ public class PodcastInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id; // 主键ID
+    private Integer id; // 主键ID
 
     private String subtitle;
     private String link;
@@ -24,14 +24,14 @@ public class PodcastInfo {
 
     private String keywords;
     private String firstcategorycode;
-    private String secondategorycode;
+    private String secondcategorycode;
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -121,10 +121,10 @@ public class PodcastInfo {
     }
 
     public String getSecondategorycode() {
-        return secondategorycode;
+        return secondcategorycode;
     }
 
-    public void setSecondategorycode(String secondategorycode) {
-        this.secondategorycode = secondategorycode;
+    public void setSecondategorycode(String secondcategorycode) {
+        this.secondcategorycode = secondcategorycode;
     }
 }

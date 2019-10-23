@@ -69,6 +69,7 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         PodcastInfo podcastInfo = podcastInfoRepository.findPodcastInfoByPodcastname(podcastName);
         if (podcastInfo != null) {
             JSONObject podcastInfoJSONObject = new JSONObject();
+            podcastInfoJSONObject.put("id", podcastInfo.getId());
             podcastInfoJSONObject.put("podcastname", podcastInfo.getPodcastname());
             podcastInfoJSONObject.put("subtitle", podcastInfo.getSubtitle());
             podcastInfoJSONObject.put("link", podcastInfo.getLink());

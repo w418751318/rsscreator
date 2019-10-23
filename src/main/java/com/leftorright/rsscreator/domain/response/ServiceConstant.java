@@ -39,7 +39,10 @@ public class ServiceConstant {
      * 更新播客失败，成功：'0004'-返回信息
      */
     public static final String MSG_FAIL_UPDATE_DB = "更新播客插入数据库失败！";
-
+    /**
+     * 更新播客失败，成功：'0004'-返回信息
+     */
+    public static final String MSG_FAIL_UPDATEINFO_DB = "更新播客专辑信息插入数据库失败！";
     /**
      * 查询数据库失败：'0005'
      */
