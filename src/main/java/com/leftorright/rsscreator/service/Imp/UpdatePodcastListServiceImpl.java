@@ -110,7 +110,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
      * @return
      */
     private PodcastItem savePodcastItemToDB(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length, String season, String episodeType) {
-        String itemRadioFileUrl = podcastLink + "/audio/" + uploadedPodcastName;//上传音频文件在服务器上的位置
+        String prefixLink = podcastLink.replace("https://","https://dts.podtrac.com/redirect.mp3/");
+        String itemRadioFileUrl = prefixLink + "/audio/" + uploadedPodcastName;//上传音频文件在服务器上的位置
         String itemLink = podcastLink + "/" + podcastName + "/" + episode;//link节点的内容为本集的网址，拼写规则：主页网址(link)+"/"+podcastName+"/"+episode
         //上传时间
         SimpleDateFormat sdf3 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
@@ -175,7 +176,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         pubDate.addText(pubDateString);
         guid.addAttribute("isPermaLink", "true").addText(itemLink);
         //需要一个上传的音频文件类型+音频文件url+音频文件长度
-        String itemRadioFileUrl = podcastLink + "/audio/" + uploadedPodcastName;
+        String prefixLink = podcastLink.replace("https://","https://dts.podtrac.com/redirect.mp3/");
+        String itemRadioFileUrl = prefixLink + "/audio/" + uploadedPodcastName;
         enclosure.addAttribute("type", enclosureType).addAttribute("length", length).addAttribute("url", itemRadioFileUrl);
         //需要一个音频文件长度 单位：秒
         itunesDuration.addText(duration);
