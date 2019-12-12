@@ -56,6 +56,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
                     channel = rss.element("channel");
                     String podcastAuthor = channel.elementText("author");
                     String podcastLink = channel.elementText("link");
+                    Element itunesImageElement = channel.element("image");
+                    String imageURL = itunesImageElement.attributeValue("href");
                     //写入数据库
                     Object podcastItem = savePodcastItemToDB(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType);
                     if (podcastItem instanceof PodcastItem) {
@@ -64,7 +66,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
                         return jsonResult(ServiceConstant.STATUS_FAIL, ServiceConstant.MSG_FAIL_UPDATE_DB, "", "", null);
                     }
                     //创建xml中的item节点
-                    Element newItem = createNewItem(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType);
+                    Element newItem = createNewItem(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType,imageURL);
                     //向channel节点中插入item节点
                     channel.add(newItem);
                     //写入数据
@@ -133,7 +135,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         return podcastItemRepository.save(podcastItem);
     }
 
-    private Element createNewItem(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length, String season, String episodeType) {
+    private Element createNewItem(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length, String season, String episodeType, String imageURL) {
         //新增加的播客
         Element newItem = DocumentHelper.createElement("item");
 
@@ -151,6 +153,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         Element itunesDuration = DocumentHelper.createElement("itunes:duration");
         Element episodeTypeElement = DocumentHelper.createElement("itunes:episodeType");//full(默认) || trailer || bonus
         Element itunesSeason = DocumentHelper.createElement("itunes:season");
+        Element itunesImageElement = DocumentHelper.createElement("itunes:image");
 
         episodeTypeElement.addText(episodeType);
         itunesSeason.addText(season);
@@ -180,10 +183,13 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         //需要一个音频文件长度 单位：秒
         itunesDuration.addText(duration);
 
+        itunesImageElement.addAttribute("href",imageURL);//每个item中增加一个image节点，用于每一集的图片展示，目前图片内容为logo图
+
         newItem.add(itunesSeason);
         newItem.add(podcastTitle);
         newItem.add(itunesTitle);
         newItem.add(description);
+        newItem.add(itunesImageElement);
         newItem.add(link);
         newItem.add(author);
         newItem.add(pubDate);
@@ -195,7 +201,6 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
 
         newItem.add(contentEncoded);
         newItem.add(itunesSummary);
-
 
         return newItem;
     }
