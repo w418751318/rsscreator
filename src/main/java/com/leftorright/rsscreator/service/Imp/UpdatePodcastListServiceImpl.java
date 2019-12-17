@@ -143,8 +143,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         Element podcastTitle = DocumentHelper.createElement("title");
         Element itunesTitle = DocumentHelper.createElement("itunes:title");
         Element description = DocumentHelper.createElement("description");
-        Element contentEncoded = DocumentHelper.createElement("content:encoded");
-        Element itunesSummary = DocumentHelper.createElement("itunes:summary");
+//        Element contentEncoded = DocumentHelper.createElement("content:encoded");
+//        Element itunesSummary = DocumentHelper.createElement("itunes:summary");
         Element link = DocumentHelper.createElement("link");
         Element author = DocumentHelper.createElement("author");
         Element pubDate = DocumentHelper.createElement("pubDate");
@@ -162,8 +162,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         itunesTitle.addText(title);
 
         description.addCDATA(shownotes);
-        contentEncoded.addCDATA(shownotes);
-        itunesSummary.addCDATA(shownotes);
+//        contentEncoded.addCDATA(shownotes);
+//        itunesSummary.addCDATA(shownotes);
 
         //需要一个link的内容
         String itemLink = podcastLink + "/" + podcastName + "/" + episode;
@@ -199,8 +199,8 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         newItem.add(itunesEpisode);
         newItem.add(episodeTypeElement);
 
-        newItem.add(contentEncoded);
-        newItem.add(itunesSummary);
+//        newItem.add(contentEncoded);
+//        newItem.add(itunesSummary);
 
         return newItem;
     }
