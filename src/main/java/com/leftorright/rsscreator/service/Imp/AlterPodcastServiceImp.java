@@ -77,8 +77,8 @@ public class AlterPodcastServiceImp implements AlterPodcastService {
                     e.element("description").setText("");//清空description
                     e.element("description").addCDATA(newShownotes);//设置description
 
-                    e.element("encoded").setText("");//清空contentEncoded
-                    e.element("encoded").addCDATA(newShownotes);//设置content:encoded
+//                    e.element("encoded").setText("");//清空contentEncoded
+//                    e.element("encoded").addCDATA(newShownotes);//设置content:encoded
 
                     e.element("summary").setText("");//清空itunes:summary
                     e.element("summary").addCDATA(newShownotes);//设置itunes:summary

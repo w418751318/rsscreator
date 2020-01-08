@@ -164,9 +164,14 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         description.addCDATA(shownotes);
 //        contentEncoded.addCDATA(shownotes);
 //        itunesSummary.addCDATA(shownotes);
-
+        String pdNameStr;
         //需要一个link的内容
-        String itemLink = podcastLink + "/" + podcastName + "/" + episode;
+        if (podcastName.length() > 22){
+            pdNameStr = podcastName.substring(0,22);
+        }else {
+            pdNameStr = podcastName;
+        }
+        String itemLink = podcastLink + "/justpod/episode/" + pdNameStr + "/" ;
         link.addText(itemLink);
         //需要一个author的内容
         author.addText(podcastAuthor);
