@@ -164,14 +164,13 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         description.addCDATA(shownotes);
 //        contentEncoded.addCDATA(shownotes);
 //        itunesSummary.addCDATA(shownotes);
-        String pdNameStr;
         //需要一个link的内容
-        if (podcastName.length() > 22){
-            pdNameStr = podcastName.substring(0,22);
-        }else {
-            pdNameStr = podcastName;
+        String itemLink;
+        if (episode == null || episode == "") {
+            itemLink = podcastLink + "/justpod/episode/" + episode + "-" + title + "/" ;
+        } else {
+            itemLink = podcastLink + "/justpod/episode/" + title + "/" ;
         }
-        String itemLink = podcastLink + "/justpod/episode/" + pdNameStr + "/" ;
         link.addText(itemLink);
         //需要一个author的内容
         author.addText(podcastAuthor);
@@ -182,8 +181,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         pubDate.addText(pubDateString);
         guid.addAttribute("isPermaLink", "true").addText(itemLink);
         //需要一个上传的音频文件类型+音频文件url+音频文件长度
-        String prefixLink = podcastLink.replace("https://", "https://dts.podtrac.com/redirect.mp3/");
-        String itemRadioFileUrl = prefixLink + "/audio/" + uploadedPodcastName;
+        String itemRadioFileUrl = "https://dts.podtrac.com/redirect.mp3/justpodmedia.com/audio/" + uploadedPodcastName;
         enclosure.addAttribute("type", enclosureType).addAttribute("length", length).addAttribute("url", itemRadioFileUrl);
         //需要一个音频文件长度 单位：秒
         itunesDuration.addText(duration);
