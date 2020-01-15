@@ -179,10 +179,10 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         sdf3.setTimeZone(TimeZone.getTimeZone("GMT"));
         String pubDateString = sdf3.format(new Date());
         pubDate.addText(pubDateString);
-        guid.addAttribute("isPermaLink", "true").addText(itemLink);
         //需要一个上传的音频文件类型+音频文件url+音频文件长度
         String itemRadioFileUrl = "https://dts.podtrac.com/redirect.mp3/justpodmedia.com/audio/" + uploadedPodcastName;
         enclosure.addAttribute("type", enclosureType).addAttribute("length", length).addAttribute("url", itemRadioFileUrl);
+        guid.addAttribute("isPermaLink", "true").addText(itemRadioFileUrl);
         //需要一个音频文件长度 单位：秒
         itunesDuration.addText(duration);
 
