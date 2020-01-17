@@ -59,16 +59,16 @@ public class AlterPodcastServiceImp implements AlterPodcastService {
                     JSONObject newdataJSONObject = JSON.parseObject(newdata);
                     String newTitle = newdataJSONObject.get("episodename").toString();
                     String newShownotes = newdataJSONObject.get("shownotes").toString();
-                    String newPubdate = newdataJSONObject.get("pubdate").toString();
+//                    String newPubdate = newdataJSONObject.get("pubdate").toString();
                     String newSeason = newdataJSONObject.get("season").toString();
                     String newEpisode = newdataJSONObject.get("episode").toString();
                     String newType = newdataJSONObject.get("type").toString();
 
                     //转换时间格式 2019-09-17 17:31:15 => Tue, 17 Sep 2019 09:31:15 GMT
-                    SimpleDateFormat sdf3 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-                    sdf3.setTimeZone(TimeZone.getTimeZone("GMT"));
-                    Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(newPubdate);
-                    String pubDateString = sdf3.format(date);
+//                    SimpleDateFormat sdf3 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+//                    sdf3.setTimeZone(TimeZone.getTimeZone("GMT"));
+//                    Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(newPubdate);
+//                    String pubDateString = sdf3.format(date);
 
                     /******************************修改xml开始******************************/
                     //将最新的数据更新到xml文件中
@@ -83,7 +83,7 @@ public class AlterPodcastServiceImp implements AlterPodcastService {
 //                    e.element("summary").setText("");//清空itunes:summary
 //                    e.element("summary").addCDATA(newShownotes);//设置itunes:summary
 
-                    e.element("pubDate").setText(pubDateString);
+//                    e.element("pubDate").setText(pubDateString);
                     e.element("season").setText(newSeason);
                     e.element("episode").setText(newEpisode);
                     e.element("episodeType").setText(newType);
@@ -99,7 +99,7 @@ public class AlterPodcastServiceImp implements AlterPodcastService {
                     PodcastItem podcastItem = podcastItemRepository.findById(Integer.parseInt(id)).get();
                     podcastItem.setTitle(newTitle);//更新播客标题
                     podcastItem.setDescription(newShownotes);
-                    podcastItem.setPubDate(pubDateString);//数据库中存储的更新时间格式为："EEE, dd MMM yyyy HH:mm:ss z"
+//                    podcastItem.setPubDate(pubDateString);//数据库中存储的更新时间格式为："EEE, dd MMM yyyy HH:mm:ss z"
                     podcastItem.setSeason(newSeason);
                     podcastItem.setEpisode(newEpisode);
                     podcastItem.setEpisodeType(newType);
@@ -117,9 +117,6 @@ public class AlterPodcastServiceImp implements AlterPodcastService {
             e.printStackTrace();
             return jsonResult(ServiceConstant.STATUS_FAIL, ServiceConstant.MSG_FAIL_UPDATE_DB, "", "", null);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return jsonResult(ServiceConstant.STATUS_FAIL, ServiceConstant.MSG_FAIL_UPDATE_DB, "", "", null);
-        } catch (ParseException e) {
             e.printStackTrace();
             return jsonResult(ServiceConstant.STATUS_FAIL, ServiceConstant.MSG_FAIL_UPDATE_DB, "", "", null);
         } catch (IOException e) {
