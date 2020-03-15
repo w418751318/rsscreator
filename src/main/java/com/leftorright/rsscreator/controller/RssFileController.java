@@ -20,6 +20,7 @@ public class RssFileController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = {"text/xml;charset=UTF-8"})
     public String rssFeed(@RequestParam("ep") String feedname) {
-        return rssFeedService.rssFeed(feedname);
+        return " rssFeed Deprecated，feedname="+feedname;
+//        return rssFeedService.rssFeed(feedname);
     }
 }
