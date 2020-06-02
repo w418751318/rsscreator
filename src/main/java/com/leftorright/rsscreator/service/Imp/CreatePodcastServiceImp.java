@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.List;
 
+/**
+ * 创建播客接口
+ */
 @Service
 public class CreatePodcastServiceImp implements CreatePodcastService {
     private static final Logger logger = LoggerFactory.getLogger(CreatePodcastServiceImp.class);
@@ -28,7 +31,6 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
     private PodcastInfoRepository podcastInfoRepository;
 
     //读取配置文件中的配置：输出（读取）rss文件地址
-//    @Value("${management.filePath_rss_dev}")
     @Value("${management.filePath_rss_prod}")
     private String filePath;
 
@@ -37,21 +39,9 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
                                          String link, String firstCategoryCode, String secondCategoryCode, String description,
                                          String keywords, String author, String email, String feedname) {
         logger.info("createPodcast:" + imageName + "podcastName:" + podcastName);
-
-        //使用汉字转成的拼音，用作xml文件的名字
-//        PinyinTool tool = new PinyinTool();
-//        String xmlFileName = null;
-//        try {
-//            xmlFileName = tool.toPinYin(podcastName);
-//        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
-//            badHanyuPinyinOutputFormatCombination.printStackTrace();
-//        }
-//        String feed = link + "/feed?ep=" + xmlFileName;
-
         String feed = link + "/feed?ep=" + feedname;
         String imageHref = "https://justpodmedia.com/pic/" + imageName;//更换新
-
-        //存入数据库
+        // 存入数据库
         PodcastInfo podcastInfo = new PodcastInfo();
         podcastInfo.setAuthor(author);
         podcastInfo.setDescription(description);
@@ -64,27 +54,21 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         podcastInfo.setKeywords(keywords);
         podcastInfo.setFirstcategorycode(firstCategoryCode);
         podcastInfo.setSecondategorycode(secondCategoryCode);
-
         if (podcastInfoRepository.save(podcastInfo) instanceof PodcastInfo) {
             logger.info("写入数据库成功！");
         } else {
             logger.info("写入数据库失败！");
             return jsonResult(ServiceConstant.STATUS_DB_ERROR, ServiceConstant.MSG_DB_ERROR, "01", "", null);
         }
-
-        /**
-         * 创建一个rss文件
-         */
+        // 创建一个rss文件
         // 创建Document
         Document document = DocumentHelper.createDocument();
-
         // 添加根节点 rss
         Element rss = document.addElement("rss");
         rss.addAttribute("version", "2.0");
         rss.addNamespace("atom", "http://www.w3.org/2005/Atom");
         rss.addNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
         rss.addNamespace("content", "http://purl.org/rss/1.0/modules/content/");
-
         // 添加channel节点
         Element channel = rss.addElement("channel");
         channel.addElement("title").addText(podcastName);
@@ -104,26 +88,31 @@ public class CreatePodcastServiceImp implements CreatePodcastService {
         channel.addElement("itunes:type").addText("episodic");
         Element categoryElement = channel.addElement("itunes:category");
         categoryElement.addAttribute("text", firstCategoryCode);
-        //分类可能没有二级分类
+        // 分类可能没有二级分类
         if (!secondCategoryCode.equals("null")){
             categoryElement.addElement("itunes:category").addAttribute("text", secondCategoryCode);
         }
         channel.addElement("itunes:image").addAttribute("href", imageHref);
-
         Element owner = channel.addElement("itunes:owner");
         owner.addElement("itunes:name").addText(podcastName);
         owner.addElement("itunes:email").addText(email);
 
         try {
-//            String filePath = "/app/file/rss.xml";
-//            String filePath1 = "/Users/zhuyikun/Desktop/rss.xml";
-
             OutputFormat format = OutputFormat.createPrettyPrint();
             format.setEncoding("utf-8");
             XMLWriter writer = new XMLWriter(new FileOutputStream(new File(filePath + feedname + ".xml")), format);
-//            XMLWriter writer = new XMLWriter( new FileOutputStream(new File("C:\\Users\\unicom\\Desktop\\rss.xml")), format);
             writer.write(document);
             logger.info("Create rss.xml success!");
+            // 创建一个以feedname命名的文件夹，位置
+            String audioFilePath = "/app/file/audio/"+feedname;
+            File audioFileFolder = new File(audioFilePath);
+            if (!audioFileFolder.exists()) {
+                audioFileFolder.mkdir();
+                logger.info("创建audioFileFolder成功="+feedname);
+            } else {
+                logger.info("/app/file/audio/"+feedname+"文件夹已存在");
+            }
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return jsonResult(ServiceConstant.STATUS_SYSERROR, ServiceConstant.MSG_SYSERROR, "00", "", null);
