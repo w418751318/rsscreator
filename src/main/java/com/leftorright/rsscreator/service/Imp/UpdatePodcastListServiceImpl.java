@@ -32,8 +32,6 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
     @Autowired
     private PodcastItemRepository podcastItemRepository;
 
-    //读取配置文件中的配置：输出（读取）rss文件地址
-//    @Value("${management.filePath_dev}")
     @Value("${management.filePath_rss_prod}")
     private String filePath;
 

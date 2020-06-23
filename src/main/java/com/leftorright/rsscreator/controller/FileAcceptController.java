@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * 文件上传
+ */
 @RestController
 @RequestMapping("/managepodcast")
 public class FileAcceptController {
@@ -20,13 +23,14 @@ public class FileAcceptController {
     @RequestMapping(value = "/uploadpic", method = RequestMethod.POST)
     public String upLoadPic(MultipartFile uploadFile) {
         String fileType = "pic";
-        return uploadFileService.uploadFile(uploadFile, fileType);
+        return uploadFileService.uploadFile(uploadFile, fileType, "");
     }
 
     //上传音频接口：ip:port/managepodcast/uploadpic
     @RequestMapping(value = "/uploadaudio", method = RequestMethod.POST)
-    public String upLoadAudio(MultipartFile uploadFile) {
+    public String upLoadAudio(MultipartFile uploadFile, @RequestParam("feedName") String feedName) {
         String fileType = "audio";
-        return uploadFileService.uploadFile(uploadFile, fileType);
+        logger.info("feedName=="+feedName);
+        return uploadFileService.uploadFile(uploadFile, fileType, feedName);
     }
 }
