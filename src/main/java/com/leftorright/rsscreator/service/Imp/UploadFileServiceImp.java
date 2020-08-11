@@ -24,13 +24,21 @@ public class UploadFileServiceImp implements UploadFileService {
     private static final Logger logger = LoggerFactory.getLogger(UploadFileServiceImp.class);
 
     @Override
-    public String uploadFile(MultipartFile zipFile, String fileType) {
+    public String uploadFile(MultipartFile zipFile, String fileType, String feedName) {
         String targetFilePath = "/app/file/";
+//        String targetFilePath = "/home/jus/";
         String duration = "";
 //        String targetFilePath = "C:\\Users\\unicom\\Desktop\\";
         if (zipFile != null) {
             String fileName = zipFile.getOriginalFilename();
-            File targetFile = new File(targetFilePath + File.separator + fileType + File.separator + fileName);
+            File targetFile;
+            // 当feedName为空，则表示上传的是图片，上传路径为/app/file/pic/logo.png
+            if ("".equals(feedName)) {
+                targetFile = new File(targetFilePath + File.separator + fileType + File.separator + fileName);
+            } else {
+                // 当feedName不为空，则表示上传的是音频文件，拼装音频文件路径，在音频路径里加上feedname,eg /app/file/audio/leftright/
+                targetFile = new File(targetFilePath + File.separator + fileType + File.separator + feedName + File.separator + fileName);
+            }
             FileOutputStream fileOutputStream = null;
             try {
                 fileOutputStream = new FileOutputStream(targetFile);
@@ -38,22 +46,26 @@ public class UploadFileServiceImp implements UploadFileService {
                 logger.info("------>>>>>>uploaded a file successfully!<<<<<<------");
             } catch (IOException e) {
                 logger.info("------>>>>>>uploaded a file IOException!<<<<<<------" + e.toString());
-//            return new ReturnValue<>(-1, null);
                 return "upload file fail!";
             } finally {
                 try {
-                    fileOutputStream.close();
+                    if(fileOutputStream != null){
+                        fileOutputStream.close();
+                    }
+
                 } catch (IOException e) {
                     logger.error("", e);
                     return "upload file fail!";
                 }
             }
             try {
-                //获取音频文件时长
-                MP3File f = (MP3File) AudioFileIO.read(targetFile);
-                MP3AudioHeader audioHeader = (MP3AudioHeader) f.getAudioHeader();
-                duration = audioHeader.getTrackLength() + "";
-                logger.info("duration:" + duration);
+                if(fileType.equals("audio")){
+                    //获取音频文件时长
+                    MP3File f = (MP3File) AudioFileIO.read(targetFile);
+                    MP3AudioHeader audioHeader = (MP3AudioHeader) f.getAudioHeader();
+                    duration = audioHeader.getTrackLength() + "";
+                    logger.info("duration:" + duration);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

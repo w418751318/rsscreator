@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leftorright.rsscreator.dao.BrandMapper">
+    
+    <insert id="saveBrand" parameterType="com.leftorright.rsscreator.entity.Brand">
+        insert  into tb_brand(name,logo,link,createdate)
+        VALUES (#{name},#{logo},#{link},sysdate())
+    </insert>
+    <update id="updateBrand" parameterType="com.leftorright.rsscreator.entity.Brand">
+        update  tb_brand
+        <set>
+            <if test="name != null ">
+                name = #{name},
+            </if>
+            <if test="logo != null ">
+                logo = #{logo},
+            </if>
+            <if test="link != null ">
+                link = #{link},
+            </if>
+            updatedate = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteBrand"  parameterType="int">
+        delete from  tb_brand where id = #{id}
+    </delete>
+    <select id="getAllBrand" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.Brand">
+        SELECT   id ,name,logo, link,createdate,updatedate
+        from tb_brand
+        <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
+    </select>
+    <select id="getAllBrandCount" resultType="int">
+        select count(id) from tb_brand
+    </select>
+</mapper>

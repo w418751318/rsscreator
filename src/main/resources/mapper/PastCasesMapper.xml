@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leftorright.rsscreator.dao.PastCasesMapper">
+    <insert id="savePastCases" parameterType="com.leftorright.rsscreator.entity.PastCases">
+        insert into past_cases(createdate,podcastid,type)
+        VALUES (sysdate(),#{podcastid},#{type})
+    </insert>
+
+    <delete id="deletePastCases" parameterType="int">
+        delete from past_cases where id = #{id}
+    </delete>
+    <select id="getAllPastCases" parameterType="com.leftorright.rsscreator.entity.PageBean" resultMap="pastmap">
+        select  id,createdate,podcastid,type,updatedate
+        from  past_cases
+        <if test="type != null ">
+            where type = #{type}
+        </if>
+        <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
+    </select>
+    <resultMap id="pastmap" type="com.leftorright.rsscreator.entity.PastCases">
+         <id column="id" property="id"/>
+         <result  property="podcastid" column="podcastid"/>
+         <association property="podcastInfo"  column="podcastid"  select="getPodInfo"/>
+    </resultMap>
+
+    <select id="getPodInfo" resultType="com.leftorright.rsscreator.entity.PodcastInfo">
+        select   id,podcastname,subtitle,link ,description,author,image ,email,feedname, keywords,firstcategorycode ,
+  secondcategorycode
+        from   tb_podcast
+        where id =#{podcastid}
+    </select>
+
+    <select id="getAllCount" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="int">
+        select  count(id)
+        from  past_cases
+        <if test="type != null ">
+            where type = #{type}
+        </if>
+    </select>
+</mapper>

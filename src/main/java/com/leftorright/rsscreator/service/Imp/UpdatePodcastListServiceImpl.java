@@ -32,8 +32,6 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
     @Autowired
     private PodcastItemRepository podcastItemRepository;
 
-    //读取配置文件中的配置：输出（读取）rss文件地址
-//    @Value("${management.filePath_dev}")
     @Value("${management.filePath_rss_prod}")
     private String filePath;
 
@@ -66,7 +64,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
                         return jsonResult(ServiceConstant.STATUS_FAIL, ServiceConstant.MSG_FAIL_UPDATE_DB, "", "", null);
                     }
                     //创建xml中的item节点
-                    Element newItem = createNewItem(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType,imageURL);
+                    Element newItem = createNewItem(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType, imageURL, feedStr);
                     //向channel节点中插入item节点
                     channel.add(newItem);
                     //写入数据
@@ -135,7 +133,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         return podcastItemRepository.save(podcastItem);
     }
 
-    private Element createNewItem(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length, String season, String episodeType, String imageURL) {
+    private Element createNewItem(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedFileName, String episode, String duration, String enclosureType, String length, String season, String episodeType, String imageURL, String feedStr) {
         //新增加的播客
         Element newItem = DocumentHelper.createElement("item");
 
@@ -180,7 +178,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         String pubDateString = sdf3.format(new Date());
         pubDate.addText(pubDateString);
         //需要一个上传的音频文件类型+音频文件url+音频文件长度
-        String itemRadioFileUrl = "https://dts.podtrac.com/redirect.mp3/justpodmedia.com/audio/" + uploadedPodcastName;
+        String itemRadioFileUrl = "https://dts.podtrac.com/redirect.mp3/justpodmedia.com/audio/" + feedStr + "/" +uploadedFileName;
         enclosure.addAttribute("type", enclosureType).addAttribute("length", length).addAttribute("url", itemRadioFileUrl);
         guid.addAttribute("isPermaLink", "true").addText(itemRadioFileUrl);
         //需要一个音频文件长度 单位：秒
