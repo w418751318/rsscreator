@@ -29,6 +29,7 @@ public class UploadFileServiceImp implements UploadFileService {
     @Override
     public String uploadFile(MultipartFile zipFile, String fileType, String feedName) {
         String targetFilePath = "/app/file/";
+//        String targetFilePath = "/home/jus/";
         String duration = "";
 //        String targetFilePath = "C:\\Users\\unicom\\Desktop\\";
         if (zipFile != null) {
@@ -51,18 +52,23 @@ public class UploadFileServiceImp implements UploadFileService {
                 return "upload file fail!";
             } finally {
                 try {
-                    fileOutputStream.close();
+                    if(fileOutputStream != null){
+                        fileOutputStream.close();
+                    }
+
                 } catch (IOException e) {
                     logger.error("", e);
                     return "upload file fail!";
                 }
             }
             try {
-                //获取音频文件时长
-                MP3File f = (MP3File) AudioFileIO.read(targetFile);
-                MP3AudioHeader audioHeader = (MP3AudioHeader) f.getAudioHeader();
-                duration = audioHeader.getTrackLength() + "";
-                logger.info("duration:" + duration);
+                if(fileType.equals("audio")){
+                    //获取音频文件时长
+                    MP3File f = (MP3File) AudioFileIO.read(targetFile);
+                    MP3AudioHeader audioHeader = (MP3AudioHeader) f.getAudioHeader();
+                    duration = audioHeader.getTrackLength() + "";
+                    logger.info("duration:" + duration);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

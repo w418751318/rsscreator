@@ -22,4 +22,8 @@ public class QueryPodcastInfoFromDBController {
         return queryPodcastFromDBService.queryPodcastInfo(podcastName);
     }
 
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    public BaseResponse queryPodcastFromDBByFeedname(@RequestParam("feedname") String feedname) {
+        return queryPodcastFromDBService.queryPodcastInfoByFeedname(feedname);
+    }
 }

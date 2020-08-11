@@ -9,5 +9,9 @@ public interface QueryPodcastFromDBService {
     //查询播客信息，例如：播客名，播客简介，播客作者等
     public BaseResponse queryPodcastInfo(String podcastName);
 
+    public BaseResponse queryPodcastInfoByFeedname(String feedname);
+
     public ServiceResponse queryPodcastItems(String podcastName);
+
+    public ServiceResponse queryPodcastItemsByFeedName(String feedname);
 }

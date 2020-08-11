@@ -9,4 +9,6 @@ import java.util.List;
 public interface PodcastInfoRepository extends CrudRepository<PodcastInfo, Integer> {
     List<PodcastInfo> findAll();
     PodcastInfo findPodcastInfoByPodcastname(String podcastName);
+
+    PodcastInfo findPodcastInfoByFeedname(String feedname);
 }

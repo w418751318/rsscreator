@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leftorright.rsscreator.dao.CommonMapper">
+    <insert id="saveCommon" parameterType="com.leftorright.rsscreator.entity.Common">
+        insert into common (title,content,recruittime,publishtime,createdate,type)
+        VALUES (#{title},#{content},#{recruittime},#{publishtime},sysdate(),#{type})
+    </insert>
+    <update id="updateCommon" parameterType="com.leftorright.rsscreator.entity.Common">
+        update common
+        <set>
+            <if test="title != null ">
+                title = #{title},
+            </if>
+            <if test="content != null ">
+                content = #{content},
+            </if>
+            <if test="recruittime != null ">
+                recruittime = #{recruittime},
+            </if>
+            <if test="publishtime != null ">
+                publishtime = #{publishtime},
+            </if>
+            <if test="type != null ">
+                type = #{type},
+            </if>
+            updatedate = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        delete from common where id = #{id}
+    </delete>
+    <select id="getAllCommon" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.Common">
+        select  id,title,content,recruittime,publishtime,createdate,updatedate,type
+        from  common where type = #{type}
+        <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
+    </select>
+
+    <select id="getAllCommonCount" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="int">
+        select  count(id)
+        from  common where type = #{type}
+    </select>
+</mapper>

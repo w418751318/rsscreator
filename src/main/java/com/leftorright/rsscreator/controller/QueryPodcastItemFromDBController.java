@@ -22,4 +22,10 @@ public class QueryPodcastItemFromDBController {
     public ServiceResponse queryPodcastItemFromDB(@RequestParam("podcastName") String podcastName) {
         return queryPodcastFromDBService.queryPodcastItems(podcastName);
     }
+
+
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    public ServiceResponse queryPodcastItemFromDBByFeedname(@RequestParam("feedname") String feedname) {
+        return queryPodcastFromDBService.queryPodcastItemsByFeedName(feedname);
+    }
 }

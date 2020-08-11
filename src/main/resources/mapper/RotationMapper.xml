@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leftorright.rsscreator.dao.RotationMapper">
+    <insert id="saveRotation" parameterType="com.leftorright.rsscreator.entity.Rotation">
+        INSERT INTO tb_rotation(name,banner,link,sort,createdate)
+        VALUES (#{name},#{banner},#{link},#{sort},sysdate())
+    </insert>
+
+    <update id="updateRotation" parameterType="com.leftorright.rsscreator.entity.Rotation">
+        UPDATE tb_rotation
+        <set>
+            <if test="name != null ">
+                name = #{name},
+            </if>
+            <if test="banner != null ">
+                banner = #{banner},
+            </if>
+            <if test="link != null ">
+                link = #{link},
+            </if>
+            <if test="sort != null ">
+                sort = #{sort},
+            </if>
+            updatedate = sysdate()
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteRotation" parameterType="int">
+        delete FROM tb_rotation where id = #{id}
+    </delete>
+    <select id="getRotation" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.Rotation">
+        select   id,name,banner,link,sort,createdate,updatedate
+        FROM tb_rotation
+        ORDER by sort,createdate,updatedate
+        <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
+    </select>
+    <select id="getRotationCount" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="int">
+        select   count(id)
+        FROM tb_rotation
+    </select>
+
+</mapper>
