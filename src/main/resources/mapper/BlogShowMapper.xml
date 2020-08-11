@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leftorright.rsscreator.dao.BlogShowMapper">
+    <insert id="saveBlogShow" parameterType="com.leftorright.rsscreator.entity.BlogShow"  useGeneratedKeys="true" keyColumn="id" keyProperty="id" >
+        insert into blog_show(type,webbanner,appbanner,isbanner,isshow,createdate,podcastid,anchordesc,link,title,text)
+        VALUES (#{type},#{webbanner},#{appbanner},#{isbanner},#{isshow},sysdate(),#{podcastid},#{anchordesc},#{link},#{title},#{text})
+    </insert>
+    <insert id="savePodcast" parameterType="com.leftorright.rsscreator.entity.PodcastItem" useGeneratedKeys="true" keyColumn="id" keyProperty="id" >
+        insert into tb_podcast (podcastname) values (#{podcastname})
+    </insert>
+    <update id="updateBlogShow" parameterType="com.leftorright.rsscreator.entity.BlogShow">
+        update blog_show
+        <set>
+            <if test="type != null ">
+                type = #{type},
+            </if>
+            <if test="webbanner != null ">
+                webbanner = #{webbanner},
+            </if>
+            <if test="appbanner != null ">
+                appbanner = #{appbanner},
+            </if>
+            <if test="isbanner != null ">
+                isbanner = #{isbanner},
+            </if>
+            <if test="isshow != null ">
+                isshow = #{isshow},
+            </if>
+            <if test="anchordesc != null ">
+                anchordesc = #{anchordesc},
+            </if>
+            <if test="link != null ">
+                link = #{link},
+            </if>
+            <if test="title != null ">
+                title = #{title},
+            </if>
+            <if test="text != null">
+                text = #{text},
+            </if>
+            updatedate = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBlogShow" parameterType="int">
+        delete from blog_show where id = #{id}
+    </delete>
+
+    <select id="getAllBlogShow" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.BlogShow">
+        select  id,type,webbanner,appbanner,isbanner,isshow,createdate,updatedate,anchordesc,link,title,text
+        from blog_show
+        <where>
+            1=1
+            <if test="isbanner != null ">
+               and isbanner = #{isbanner}
+            </if>
+            <if test="isshow != null ">
+                and isshow = #{isshow}
+            </if>
+        </where>
+        <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
+    </select>
+
+    <select id="getAllCount" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="int">
+        select count(id)
+        from blog_show
+        <where>
+            1=1
+            <if test="isbanner != null ">
+                and isbanner = #{isbanner}
+            </if>
+            <if test="isshow != null ">
+                and isshow = #{isshow}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getAllPodcast"  resultMap="podmap" parameterType="com.leftorright.rsscreator.entity.PageBean">
+         select   tp.id,tp.podcastname,tp.subtitle,tp.link ,tp.description,tp.author,tp.image ,tp.email,tp.feedname, tp.keywords,tp.firstcategorycode ,
+          tp.secondcategorycode,
+          bs.id b_id,type ,webbanner ,appbanner ,isbanner,isshow,createdate,updatedate,anchordesc,podcastid,bs.link b_link ,bs.title,bs.text
+        from   tb_podcast tp LEFT JOIN  blog_show bs on tp.id =  bs.podcastid
+        <where>
+            1=1
+            <if test="isbanner != null ">
+                and isbanner = #{isbanner}
+            </if>
+            <if test="isshow != null ">
+                and isshow = #{isshow}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+        </where>
+        ORDER BY bs.createdate desc
+        <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
+    </select>
+
+    <select id="getAllPodcastCount"  resultType="int" parameterType="com.leftorright.rsscreator.entity.PageBean">
+        select   count(tp.id)
+        from   tb_podcast tp LEFT JOIN  blog_show bs on tp.id =  bs.podcastid
+        <where>
+            1=1
+            <if test="isbanner != null ">
+                and isbanner = #{isbanner}
+            </if>
+            <if test="isshow != null ">
+                and isshow = #{isshow}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+    <resultMap id="podmap" type="com.leftorright.rsscreator.entity.PodcastInfo">
+        <result column="id" property="id"/>
+        <result column="podcastname" property="podcastname"/>
+        <result column="subtitle" property="subtitle"/>
+        <result column="link" property="link"/>
+        <result column="description" property="description"/>
+        <result column="author" property="author"/>
+        <result column="image" property="image"/>
+        <result column="email" property="email"/>
+        <result column="feedname" property="feedname"/>
+        <result column="keywords" property="keywords"/>
+        <result column="firstcategorycode" property="firstcategorycode"/>
+        <result column="secondcategorycode" property="secondcategorycode"/>
+
+        <association property="blogShow" javaType="com.leftorright.rsscreator.entity.BlogShow">
+            <result column="b_id" property="id"/>
+            <result column="type" property="type"/>
+            <result column="webbanner" property="webbanner"/>
+            <result column="appbanner" property="appbanner"/>
+            <result column="isbanner" property="isbanner"/>
+            <result column="isshow" property="isshow"/>
+            <result column="createdate" property="createdate"/>
+            <result column="updatedate" property="updatedate"/>
+            <result column="podcastid" property="podcastid"/>
+            <result column="anchordesc" property="anchordesc"/>
+            <result column="b_link" property="link"/>
+            <result column="title" property="title"/>
+            <result column="text" property="text"/>
+            <association property="channelList" column="b_id" select="getchannelListByShowId"/>
+            <association property="channelIdList" column="b_id" select="getchannelListGroup"/>
+            <association property="membersList" column="b_id" select="getMembersByShowId"/>
+            <association property="creator" column="b_id" select="getMembersGroup"/>
+            <association property="channelIds" column="b_id" select="getChannelsGroup"/>
+            <association property="channels"  column="b_id" select="getChannelsByShowId"/>
+        </association>
+    </resultMap>
+    <select id="getchannelListByShowId" resultType="com.leftorright.rsscreator.entity.Channel">
+        SELECT  tc.id,tc.name,tc.logo,tc.link,tc.showid,tc.type
+        FROM tb_channel tc WHERE tc.showid = #{id} and tc.type = '2'
+    </select>
+    <select id="getchannelListGroup" resultType="java.lang.String" >
+        SELECT  GROUP_CONCAT(tc.id)
+        FROM tb_channel tc WHERE tc.showid = #{id} and tc.type = '2'
+    </select>
+    <select id="getMembersByShowId" resultType="com.leftorright.rsscreator.entity.Members">
+        SELECT  id,name,picture,link,introduction,createdate,updatedate,weibo,isshow
+        FROM show_member sm ,tb_members tm WHERE sm.showid = #{id} AND sm.memberid = tm.id
+    </select>
+    <select id="getMembersGroup" resultType="java.lang.String" >
+         SELECT  GROUP_CONCAT(sm.memberid)
+        FROM show_member sm ,tb_members tm WHERE sm.showid = #{id} AND sm.memberid = tm.id
+    </select>
+
+    <select id="getChannelsByShowId" resultType="com.leftorright.rsscreator.entity.Channel">
+        SELECT  tc.id,tc.name,tc.logo,tc.link,tc.showid,tc.type
+        FROM tb_channel tc WHERE tc.showid = #{id} and tc.type ='1'
+    </select>
+    <select id="getChannelsGroup" resultType="java.lang.String" >
+        SELECT  GROUP_CONCAT(tc.id)
+        FROM tb_channel tc WHERE tc.showid = #{id} and tc.type = '1' 
+    </select>
+
+    <select id="getBlowShowByName" resultMap="blowMap">
+        SELECT  bs.id,type ,webbanner ,appbanner ,isbanner,isshow,createdate,updatedate,anchordesc,podcastid,bs.link,bs.title,bs.text
+        from blog_show bs,tb_podcast tp
+        where tp.id =  bs.podcastid  and tp.feedname = #{name}
+    </select>
+    <resultMap id="blowMap" type="com.leftorright.rsscreator.entity.BlogShow">
+        <result column="id" property="id"/>
+        <association property="channelList" column="id" select="getchannelListByShowId"/>
+        <association property="membersList" column="id" select="getMembersByShowId"/>
+        <association property="creator" column="id" select="getMembersGroup"/>
+    </resultMap>
+</mapper>

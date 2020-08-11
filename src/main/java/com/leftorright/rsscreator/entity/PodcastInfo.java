@@ -1,6 +1,7 @@
 package com.leftorright.rsscreator.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_podcast") // 指定关联的数据库的表名
@@ -26,6 +27,7 @@ public class PodcastInfo {
     private String firstcategorycode;
     private String secondcategorycode;
 
+    private BlogShow blogShow;
 
     public Integer getId() {
         return id;
@@ -127,4 +129,13 @@ public class PodcastInfo {
     public void setSecondategorycode(String secondcategorycode) {
         this.secondcategorycode = secondcategorycode;
     }
+
+    public BlogShow getBlogShow() {
+        return blogShow;
+    }
+
+    public void setBlogShow(BlogShow blogShow) {
+        this.blogShow = blogShow;
+    }
+    
 }

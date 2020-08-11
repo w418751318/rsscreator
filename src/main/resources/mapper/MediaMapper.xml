@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leftorright.rsscreator.dao.MediaMapper">
+
+    <insert id="saveMedia" parameterType="com.leftorright.rsscreator.entity.Media">
+        insert  into tb_media(name,logo,content,link,createdate)
+        VALUES (#{name},#{logo},#{content},#{link},sysdate())
+    </insert>
+    <update id="updateMedia" parameterType="com.leftorright.rsscreator.entity.Media">
+        update  tb_media
+        <set>
+            <if test="name != null ">
+                name = #{name},
+            </if>
+            <if test="logo != null ">
+                logo = #{logo},
+            </if>
+            <if test="link != null ">
+                link = #{link},
+            </if>
+            <if test="content != null ">
+                content = #{content},
+            </if>
+            updatedate = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteMedia"  parameterType="int">
+        delete from  tb_media where id = #{id}
+    </delete>
+    <select id="getAllMedia" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.Media">
+        SELECT   id ,name,logo, content,link,createdate,updatedate
+        from tb_media
+        <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
+    </select>
+    <select id="getAllMediaCount" resultType="int">
+        select count(id) from tb_media
+    </select>
+</mapper>

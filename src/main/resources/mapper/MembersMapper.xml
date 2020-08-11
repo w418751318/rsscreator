@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leftorright.rsscreator.dao.MembersMapper">
+    <insert id="saveMembers" parameterType="com.leftorright.rsscreator.entity.Members">
+        insert  into tb_members(name,picture,link,introduction,createdate,weibo,isshow)
+        VALUES (#{name},#{picture},#{link},#{introduction},sysdate(),#{weibo},#{isshow})
+    </insert>
+    <update id="updateMembers" parameterType="com.leftorright.rsscreator.entity.Members">
+        update  tb_members
+        <set>
+            <if test="name != null ">
+                name = #{name},
+            </if>
+            <if test="picture != null ">
+                picture = #{picture},
+            </if>
+            <if test="link != null ">
+                link = #{link},
+            </if>
+            <if test="introduction != null ">
+                introduction = #{introduction},
+            </if>
+            <if test="weibo != null ">
+                weibo = #{weibo},
+            </if>
+            <if test="isshow != null ">
+                isshow = #{isshow},
+            </if>
+            updatedate = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteMembers"  parameterType="int">
+        delete from tb_members where id = #{id}
+    </delete>
+    <select id="getAllMembers" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.Members">
+        SELECT   id,name,picture,link,introduction,createdate,updatedate,weibo,isshow
+        from tb_members
+        <where>
+            <if test="isshow != null ">
+                 isshow = #{isshow}
+            </if>
+            <if test="key != null ">
+                AND NAME LIKE concat('%',#{key},'%')
+            </if>
+        </where>
+
+        <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
+    </select>
+    <select id="getAllMembersCount" resultType="int">
+        select count(id) from tb_members
+        <where>
+            <if test="isshow != null ">
+                isshow = #{isshow}
+            </if>
+            <if test="key != null ">
+                AND NAME LIKE concat('%',#{key},'%')
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteShowMember" parameterType="java.lang.Integer">
+        delete FROM show_member WHERE showid = #{id}
+    </delete>
+    <insert id="saveShowMembers">
+        INSERT INTO show_member (showid,memberid)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{id},#{item})
+        </foreach>
+    </insert>
+
+    <select id="getMembersByShowId" resultType="com.leftorright.rsscreator.entity.Members">
+        SELECT  tm.id,tm.name,tm.picture,tm.link,tm.introduction,tm.createdate,tm.updatedate,tm.weibo,tm.isshow
+        FROM show_member sm ,tb_members tm ,tb_podcast tp ,blog_show bs
+        WHERE sm.showid = bs.id AND sm.memberid = tm.id AND tp.feedname = #{name}
+        AND bs.podcastid = tp.id
+    </select>
+
+</mapper>

@@ -90,6 +90,31 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
 
 
     @Override
+    public BaseResponse queryPodcastInfoByFeedname(String feedname) {
+        PodcastInfo podcastInfo = podcastInfoRepository.findPodcastInfoByFeedname(feedname);
+        if (podcastInfo != null) {
+            JSONObject podcastInfoJSONObject = new JSONObject();
+            podcastInfoJSONObject.put("id", podcastInfo.getId());
+            podcastInfoJSONObject.put("podcastname", podcastInfo.getPodcastname());
+            podcastInfoJSONObject.put("subtitle", podcastInfo.getSubtitle());
+            podcastInfoJSONObject.put("link", podcastInfo.getLink());
+            podcastInfoJSONObject.put("description", podcastInfo.getDescription());
+            podcastInfoJSONObject.put("author", podcastInfo.getAuthor());
+            podcastInfoJSONObject.put("image", podcastInfo.getImage());
+            podcastInfoJSONObject.put("email", podcastInfo.getEmail());
+            podcastInfoJSONObject.put("feedname", podcastInfo.getFeedname());
+            podcastInfoJSONObject.put("keywords", podcastInfo.getKeywords());
+            podcastInfoJSONObject.put("firstCategoryCode", podcastInfo.getFirstcategorycode());
+            podcastInfoJSONObject.put("secondCategoryCode", podcastInfo.getSecondategorycode());
+            return podcastInfojsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, podcastInfoJSONObject);
+        } else {
+            return podcastInfojsonResult(ServiceConstant.STATUS_QUERY_FAIL, ServiceConstant.MSG_FAIL_QUERY,  null);
+        }
+
+    }
+
+
+    @Override
     public ServiceResponse queryPodcastItems(String podcastName) {
         //使用汉字转成的拼音，用作xml文件的名字
 //        PinyinTool tool = new PinyinTool();
@@ -128,6 +153,8 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
                 podcastItemJSONObject.put("episode", podcastItem.getEpisode());
                 podcastItemJSONObject.put("type", podcastItem.getEpisodeType());
                 podcastItemJSONObject.put("podcastname", podcastItem.getPodcastname());
+                podcastItemJSONObject.put("enclosureurl", podcastItem.getEnclosure_url());
+                podcastItemJSONObject.put("author", podcastItem.getAuthor());
                 podcastItemJSONArray.add(podcastItemJSONObject);
             }
             //本播客feed地址
@@ -139,6 +166,65 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         }
         return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject, podcastItemJSONArray);
     }
+
+
+    @Override
+    public ServiceResponse queryPodcastItemsByFeedName(String feedname) {
+        //使用汉字转成的拼音，用作xml文件的名字
+//        PinyinTool tool = new PinyinTool();
+//        String xmlFileName = null;
+//        try {
+//            xmlFileName = tool.toPinYin(podcastName);
+//        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+//            badHanyuPinyinOutputFormatCombination.printStackTrace();
+//        }
+        PodcastInfo podcastInfo = podcastInfoRepository.findPodcastInfoByFeedname(feedname);
+        if(podcastInfo == null){
+            return jsonResult(ServiceConstant.STATUS_QUERY_FAIL_ITEM, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null, null);
+        }
+        //查询数据库 items
+        List<PodcastItem> podcastItemList = podcastItemRepository.findPodcastItemByPodcastname(podcastInfo.getPodcastname());
+        JSONArray podcastItemJSONArray = new JSONArray();
+        JSONObject podcastInfoJSONObject = new JSONObject();
+        if (podcastItemList.size() > 0) {
+            for (int i = podcastItemList.size()-1;i >=0;i--) {
+                PodcastItem podcastItem = podcastItemList.get(i);
+                JSONObject podcastItemJSONObject = new JSONObject();
+                /**
+                 * 前端展示内容：eg:
+                 * key: '1',
+                 * episodename: '王俊煜：迟早大家不会再装APP',
+                 * shownotes:"这里是shownotes",
+                 * pubdate: '2019-09-16 11:47:56',
+                 * season: '9',
+                 * episode: '1',
+                 * type: 'full',
+                 * podcastname:'忽左忽右'
+                 */
+                podcastItemJSONObject.put("key", podcastItem.getId());
+                podcastItemJSONObject.put("episodename", podcastItem.getTitle());
+                podcastItemJSONObject.put("shownotes", podcastItem.getDescription());
+                Date date = new Date(podcastItem.getPubDate());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                podcastItemJSONObject.put("pubdate", simpleDateFormat.format(date));//此处date用于前端展示
+                podcastItemJSONObject.put("season", podcastItem.getSeason());
+                podcastItemJSONObject.put("episode", podcastItem.getEpisode());
+                podcastItemJSONObject.put("type", podcastItem.getEpisodeType());
+                podcastItemJSONObject.put("podcastname", podcastItem.getPodcastname());
+                podcastItemJSONObject.put("enclosureurl", podcastItem.getEnclosure_url());
+                podcastItemJSONObject.put("author", podcastItem.getAuthor());
+                podcastItemJSONArray.add(podcastItemJSONObject);
+            }
+            //本播客feed地址
+//            String feedStr = "https://justpodmedia.com/feed?ep=" + xmlFileName;
+//            podcastInfoJSONObject.put("feed", feedStr);
+        } else {
+            logger.info("数据库中没有播客item的数据");
+            return jsonResult(ServiceConstant.STATUS_QUERY_FAIL_ITEM, ServiceConstant.MSG_FAIL_QUERY, "", "", null, null, null);
+        }
+        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastInfoJSONObject, podcastItemJSONArray);
+    }
+
 
     private static ServiceResponse<Object, Object> jsonResult(String responseCode, String responseMsg, String uid, String username, String[] permissions, JSONObject podcastInfoJSONObject, JSONArray podcastItemJSONArray) {
         ServiceResponse serviceResponse = new ServiceResponse();
