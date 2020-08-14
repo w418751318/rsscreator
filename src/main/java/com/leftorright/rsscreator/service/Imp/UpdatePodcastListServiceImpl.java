@@ -57,7 +57,7 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
                     Element itunesImageElement = channel.element("image");
                     String imageURL = itunesImageElement.attributeValue("href");
                     //写入数据库
-                    Object podcastItem = savePodcastItemToDB(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType);
+                    Object podcastItem = savePodcastItemToDB(podcastName, podcastLink, podcastAuthor, title, shownotes, uploadedPodcastName, episode, duration, enclosureType, length, season, episodeType, feedStr);
                     if (podcastItem instanceof PodcastItem) {
                         logger.info("更新播客 " + title + " 成功！");
                     } else {
@@ -107,9 +107,9 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
      * @param length
      * @return
      */
-    private PodcastItem savePodcastItemToDB(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length, String season, String episodeType) {
+    private PodcastItem savePodcastItemToDB(String podcastName, String podcastLink, String podcastAuthor, String title, String shownotes, String uploadedPodcastName, String episode, String duration, String enclosureType, String length, String season, String episodeType, String feedStr) {
         String prefixLink = podcastLink.replace("https://", "https://dts.podtrac.com/redirect.mp3/");
-        String itemRadioFileUrl = prefixLink + "/audio/" + uploadedPodcastName;//上传音频文件在服务器上的位置
+        String itemRadioFileUrl = prefixLink + "/audio/" + feedStr + "/" + uploadedPodcastName;//上传音频文件在服务器上的位置
         String itemLink = podcastLink + "/" + podcastName + "/" + episode;//link节点的内容为本集的网址，拼写规则：主页网址(link)+"/"+podcastName+"/"+episode
         //上传时间
         SimpleDateFormat sdf3 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
@@ -165,9 +165,9 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         //需要一个link的内容
         String itemLink;
         if (episode == null || episode == "") {
-            itemLink = podcastLink + "/justpod/episode/" + episode + "-" + title + "/" ;
+            itemLink = podcastLink + "/justpod/episode/" + episode + "-" + title + "/";
         } else {
-            itemLink = podcastLink + "/justpod/episode/" + title + "/" ;
+            itemLink = podcastLink + "/justpod/episode/" + title + "/";
         }
         link.addText(itemLink);
         //需要一个author的内容
@@ -178,13 +178,13 @@ public class UpdatePodcastListServiceImpl implements UpdatePodcastListService {
         String pubDateString = sdf3.format(new Date());
         pubDate.addText(pubDateString);
         //需要一个上传的音频文件类型+音频文件url+音频文件长度
-        String itemRadioFileUrl = "https://dts.podtrac.com/redirect.mp3/justpodmedia.com/audio/" + feedStr + "/" +uploadedFileName;
+        String itemRadioFileUrl = "https://dts.podtrac.com/redirect.mp3/justpodmedia.com/audio/" + feedStr + "/" + uploadedFileName;
         enclosure.addAttribute("type", enclosureType).addAttribute("length", length).addAttribute("url", itemRadioFileUrl);
         guid.addAttribute("isPermaLink", "true").addText(itemRadioFileUrl);
         //需要一个音频文件长度 单位：秒
         itunesDuration.addText(duration);
 
-        itunesImageElement.addAttribute("href",imageURL);//每个item中增加一个image节点，用于每一集的图片展示，目前图片内容为logo图
+        itunesImageElement.addAttribute("href", imageURL);//每个item中增加一个image节点，用于每一集的图片展示，目前图片内容为logo图
 
         newItem.add(itunesSeason);
         newItem.add(podcastTitle);
