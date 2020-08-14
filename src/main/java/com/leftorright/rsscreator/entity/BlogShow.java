@@ -33,6 +33,7 @@ public class BlogShow implements Serializable {
     //收听标记
     private List<Channel> channels;
     private String channelIds;
+    private String banner;
 
     public Integer getId() {
         return id;
@@ -192,6 +193,14 @@ public class BlogShow implements Serializable {
 
     public void setChannelIdList(String channelIdList) {
         this.channelIdList = channelIdList;
+    }
+
+    public String getBanner() {
+        return banner;
+    }
+
+    public void setBanner(String banner) {
+        this.banner = banner;
     }
 }
 

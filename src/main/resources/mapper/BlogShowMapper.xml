@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leftorright.rsscreator.dao.BlogShowMapper">
     <insert id="saveBlogShow" parameterType="com.leftorright.rsscreator.entity.BlogShow"  useGeneratedKeys="true" keyColumn="id" keyProperty="id" >
-        insert into blog_show(type,webbanner,appbanner,isbanner,isshow,createdate,podcastid,anchordesc,link,title,text)
-        VALUES (#{type},#{webbanner},#{appbanner},#{isbanner},#{isshow},sysdate(),#{podcastid},#{anchordesc},#{link},#{title},#{text})
+        insert into blog_show(type,webbanner,appbanner,isbanner,isshow,createdate,podcastid,anchordesc,link,title,text,banner)
+        VALUES (#{type},#{webbanner},#{appbanner},#{isbanner},#{isshow},sysdate(),#{podcastid},#{anchordesc},#{link},#{title},#{text},#{banner})
     </insert>
     <insert id="savePodcast" parameterType="com.leftorright.rsscreator.entity.PodcastItem" useGeneratedKeys="true" keyColumn="id" keyProperty="id" >
         insert into tb_podcast (podcastname) values (#{podcastname})
@@ -39,6 +39,9 @@
             <if test="text != null">
                 text = #{text},
             </if>
+            <if test="banner != null ">
+                banner = #{banner},
+            </if>
             updatedate = sysdate()
         </set>
         where id = #{id}
@@ -49,7 +52,7 @@
     </delete>
 
     <select id="getAllBlogShow" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.BlogShow">
-        select  id,type,webbanner,appbanner,isbanner,isshow,createdate,updatedate,anchordesc,link,title,text
+        select  id,type,webbanner,appbanner,isbanner,isshow,createdate,updatedate,anchordesc,link,title,text,banner
         from blog_show
         <where>
             1=1
@@ -80,7 +83,7 @@
     <select id="getAllPodcast"  resultMap="podmap" parameterType="com.leftorright.rsscreator.entity.PageBean">
          select   tp.id,tp.podcastname,tp.subtitle,tp.link ,tp.description,tp.author,tp.image ,tp.email,tp.feedname, tp.keywords,tp.firstcategorycode ,
           tp.secondcategorycode,
-          bs.id b_id,type ,webbanner ,appbanner ,isbanner,isshow,createdate,updatedate,anchordesc,podcastid,bs.link b_link ,bs.title,bs.text
+          bs.id b_id,type ,webbanner ,appbanner ,banner,isbanner,isshow,createdate,updatedate,anchordesc,podcastid,bs.link b_link ,bs.title,bs.text
         from   tb_podcast tp LEFT JOIN  blog_show bs on tp.id =  bs.podcastid
         <where>
             1=1
@@ -94,7 +97,7 @@
                 and type = #{type}
             </if>
         </where>
-        ORDER BY bs.createdate desc
+        ORDER BY bs.updatedate desc
         <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
     </select>
 
@@ -142,6 +145,7 @@
             <result column="b_link" property="link"/>
             <result column="title" property="title"/>
             <result column="text" property="text"/>
+            <result column="banner" property="banner"/>
             <association property="channelList" column="b_id" select="getchannelListByShowId"/>
             <association property="channelIdList" column="b_id" select="getchannelListGroup"/>
             <association property="membersList" column="b_id" select="getMembersByShowId"/>
@@ -177,7 +181,7 @@
     </select>
 
     <select id="getBlowShowByName" resultMap="blowMap">
-        SELECT  bs.id,type ,webbanner ,appbanner ,isbanner,isshow,createdate,updatedate,anchordesc,podcastid,bs.link,bs.title,bs.text
+        SELECT  bs.id,type ,webbanner ,appbanner ,isbanner,banner,isshow,createdate,updatedate,anchordesc,podcastid,bs.link,bs.title,bs.text
         from blog_show bs,tb_podcast tp
         where tp.id =  bs.podcastid  and tp.feedname = #{name}
     </select>
@@ -187,4 +191,9 @@
         <association property="membersList" column="id" select="getMembersByShowId"/>
         <association property="creator" column="id" select="getMembersGroup"/>
     </resultMap>
+
+    <select id="selectByPodcastid"  parameterType="java.lang.Integer" resultType="com.leftorright.rsscreator.entity.BlogShow">
+        select  id,type,webbanner,appbanner,isbanner,isshow,createdate,updatedate,anchordesc,link,title,text,banner,podcastid
+        from blog_show where podcastid = #{id} limit 1
+    </select>
 </mapper>

@@ -34,6 +34,9 @@ public class FileUtils {
             if(StringUtils.isNotBlank(blogShow.getAppbanner()) && !blogShow.getAppbanner().contains(fileUrl)){
                 blogShow.setAppbanner(fileUrl + blogShow.getAppbanner());
             }
+            if(StringUtils.isNotBlank(blogShow.getBanner()) && !blogShow.getBanner().contains(fileUrl)){
+                blogShow.setBanner(fileUrl + blogShow.getBanner());
+            }
         }else if (name.contains("Brand")){
             Brand brand = (Brand) t;
             if(StringUtils.isNotBlank(brand.getLogo()) && !brand.getLogo().contains(fileUrl)){

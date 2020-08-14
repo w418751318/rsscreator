@@ -32,7 +32,7 @@
     <select id="getRotation" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.Rotation">
         select   id,name,banner,link,sort,createdate,updatedate
         FROM tb_rotation
-        ORDER by sort,createdate,updatedate
+        ORDER by sort,updatedate,createdate
         <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
     </select>
     <select id="getRotationCount" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="int">

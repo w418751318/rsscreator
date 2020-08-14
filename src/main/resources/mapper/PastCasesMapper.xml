@@ -25,9 +25,10 @@
     </resultMap>
 
     <select id="getPodInfo" resultType="com.leftorright.rsscreator.entity.PodcastInfo">
-        select   id,podcastname,subtitle,link ,description,author,image ,email,feedname, keywords,firstcategorycode ,
-  secondcategorycode
-        from   tb_podcast
+        select   id,podcastname,subtitle,link ,description,author,
+        (select banner from blog_show bs where bs.podcastid = tp.id limit 1) image ,email,feedname, keywords,firstcategorycode ,
+          secondcategorycode
+        from   tb_podcast tp
         where id =#{podcastid}
     </select>
 
@@ -37,5 +38,16 @@
         <if test="type != null ">
             where type = #{type}
         </if>
+    </select>
+
+    <select id="findPodcastInfoByFeedname" parameterType="java.lang.String" resultType="com.leftorright.rsscreator.entity.PodcastInfo" >
+         select *
+         from tb_podcast where feedname = #{feedname}
+    </select>
+
+    <select id="findPodcastItemByPodcastname" parameterType="java.lang.String" resultType="com.leftorright.rsscreator.entity.PodcastItem" >
+        select `id`,`title` ,`podcastname`,`description`,`link`,`author`,`enclosure_type`,`enclosure_length`,`duration` ,
+`episode` ,`season`,`episodeType`,`episode_type` ,pub_date pubdate 
+        from tb_podcastitem where podcastname = #{podcastname}
     </select>
 </mapper>

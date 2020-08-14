@@ -32,4 +32,5 @@ public interface BlogShowMapper {
 
     BlogShow getBlowShowByName(@Param("name") String name);
 
+    BlogShow selectByPodcastid(@Param("id") int podcastid);
 }

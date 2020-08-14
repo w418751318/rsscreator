@@ -2,9 +2,12 @@ package com.leftorright.rsscreator.service.Imp;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.leftorright.rsscreator.dao.BlogShowMapper;
+import com.leftorright.rsscreator.dao.PastCasesMapper;
 import com.leftorright.rsscreator.domain.response.BaseResponse;
 import com.leftorright.rsscreator.domain.response.ServiceConstant;
 import com.leftorright.rsscreator.domain.response.ServiceResponse;
+import com.leftorright.rsscreator.entity.BlogShow;
 import com.leftorright.rsscreator.entity.PodcastInfo;
 import com.leftorright.rsscreator.entity.PodcastItem;
 import com.leftorright.rsscreator.repository.PodcastInfoRepository;
@@ -29,6 +32,8 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
     private PodcastInfoRepository podcastInfoRepository;
     @Autowired
     private PodcastItemRepository podcastItemRepository;
+    @Autowired
+    private BlogShowMapper blogShowMapper;
 
 
     @Override
@@ -93,6 +98,7 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
     public BaseResponse queryPodcastInfoByFeedname(String feedname) {
         PodcastInfo podcastInfo = podcastInfoRepository.findPodcastInfoByFeedname(feedname);
         if (podcastInfo != null) {
+            BlogShow blogShow = blogShowMapper.selectByPodcastid(podcastInfo.getId());
             JSONObject podcastInfoJSONObject = new JSONObject();
             podcastInfoJSONObject.put("id", podcastInfo.getId());
             podcastInfoJSONObject.put("podcastname", podcastInfo.getPodcastname());
@@ -100,7 +106,7 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
             podcastInfoJSONObject.put("link", podcastInfo.getLink());
             podcastInfoJSONObject.put("description", podcastInfo.getDescription());
             podcastInfoJSONObject.put("author", podcastInfo.getAuthor());
-            podcastInfoJSONObject.put("image", podcastInfo.getImage());
+            podcastInfoJSONObject.put("image", blogShow.getBanner());
             podcastInfoJSONObject.put("email", podcastInfo.getEmail());
             podcastInfoJSONObject.put("feedname", podcastInfo.getFeedname());
             podcastInfoJSONObject.put("keywords", podcastInfo.getKeywords());

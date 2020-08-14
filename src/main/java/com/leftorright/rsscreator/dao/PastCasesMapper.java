@@ -3,6 +3,8 @@ package com.leftorright.rsscreator.dao;
 
 import com.leftorright.rsscreator.entity.PageBean;
 import com.leftorright.rsscreator.entity.PastCases;
+import com.leftorright.rsscreator.entity.PodcastInfo;
+import com.leftorright.rsscreator.entity.PodcastItem;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +21,7 @@ public interface PastCasesMapper {
 
     int getAllCount(PageBean pageBean);
 
+    PodcastInfo findPodcastInfoByFeedname(@Param("feedname") String feedname);
+
+    List<PodcastItem> findPodcastItemByPodcastname(@Param("podcastname") String podcastname);
 }
