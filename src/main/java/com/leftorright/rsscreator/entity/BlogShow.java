@@ -202,6 +202,7 @@ public class BlogShow implements Serializable {
     public void setBanner(String banner) {
         this.banner = banner;
     }
+
 }
 
 

@@ -5,6 +5,7 @@
     <insert id="saveBlogShow" parameterType="com.leftorright.rsscreator.entity.BlogShow"  useGeneratedKeys="true" keyColumn="id" keyProperty="id" >
         insert into blog_show(type,webbanner,appbanner,isbanner,isshow,createdate,podcastid,anchordesc,link,title,text,banner)
         VALUES (#{type},#{webbanner},#{appbanner},#{isbanner},#{isshow},sysdate(),#{podcastid},#{anchordesc},#{link},#{title},#{text},#{banner})
+
     </insert>
     <insert id="savePodcast" parameterType="com.leftorright.rsscreator.entity.PodcastItem" useGeneratedKeys="true" keyColumn="id" keyProperty="id" >
         insert into tb_podcast (podcastname) values (#{podcastname})
@@ -191,6 +192,7 @@
         <association property="membersList" column="id" select="getMembersByShowId"/>
         <association property="creator" column="id" select="getMembersGroup"/>
     </resultMap>
+
 
     <select id="selectByPodcastid"  parameterType="java.lang.Integer" resultType="com.leftorright.rsscreator.entity.BlogShow">
         select  id,type,webbanner,appbanner,isbanner,isshow,createdate,updatedate,anchordesc,link,title,text,banner,podcastid

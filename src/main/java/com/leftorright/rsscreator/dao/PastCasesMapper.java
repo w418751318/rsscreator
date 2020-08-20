@@ -24,4 +24,5 @@ public interface PastCasesMapper {
     PodcastInfo findPodcastInfoByFeedname(@Param("feedname") String feedname);
 
     List<PodcastItem> findPodcastItemByPodcastname(@Param("podcastname") String podcastname);
+
 }

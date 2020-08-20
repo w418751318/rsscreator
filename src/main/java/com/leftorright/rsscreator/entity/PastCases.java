@@ -21,6 +21,7 @@ public class PastCases implements Serializable {
     private String link;
     private String feedname;
 
+
     public int getId() {
         return id;
     }
@@ -100,4 +101,5 @@ public class PastCases implements Serializable {
     public void setFeedname(String feedname) {
         this.feedname = feedname;
     }
+
 }

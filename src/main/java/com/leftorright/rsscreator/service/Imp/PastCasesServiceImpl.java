@@ -32,6 +32,11 @@ public class PastCasesServiceImpl implements PastCasesService {
             String type = pastCases.getType();
             if(type.equals("2")){
                 FileUtils.setFileUrl(pastCases);
+                PodcastInfo podcastInfo = pastCases.getPodcastInfo();
+                FileUtils.setFileUrl(podcastInfo);
+                PodcastInfo save = podcastInfoRepository.save(pastCases.getPodcastInfo());
+                pastCases.setPodcastid(String.valueOf(save.getId()));
+
             }
             pastCasesMapper.savePastCases(pastCases);
             result.setCode(0);

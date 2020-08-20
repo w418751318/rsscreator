@@ -26,6 +26,19 @@
         <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
     </select>
     
+    <resultMap id="pastmap" type="com.leftorright.rsscreator.entity.PastCases">
+         <id column="id" property="id"/>
+         <result  property="podcastid" column="podcastid"/>
+         <association property="podcastInfo"  column="podcastid"  select="getPodInfo"/>
+    </resultMap>
+
+    <select id="getPodInfo" resultType="com.leftorright.rsscreator.entity.PodcastInfo">
+        select   id,podcastname,subtitle,link ,description,author,image ,email,feedname, keywords,firstcategorycode ,
+  secondcategorycode
+        from   tb_podcast
+        where id =#{podcastid}
+    </select>
+
 
     <select id="getAllCount" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="int">
         select  count(id)
@@ -45,4 +58,5 @@
 `episode` ,`season`,`episodeType`,`episode_type` ,pub_date pubdate 
         from tb_podcastitem where podcastname = #{podcastname}
     </select>
+
 </mapper>
