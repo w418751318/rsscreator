@@ -72,6 +72,12 @@ public class FileUtils {
                 rotation.setBanner(fileUrl + rotation.getBanner());
             }
         }
+        else if(name.contains("PastCases")){
+            PastCases pastCases = (PastCases) t;
+            if(StringUtils.isNotBlank(pastCases.getLogo()) && !pastCases.getLogo().contains(fileUrl)){
+                pastCases.setLogo(fileUrl + pastCases.getLogo());
+            }
+        }
     }
 
 

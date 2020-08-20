@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
@@ -211,8 +208,8 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
                 podcastItemJSONObject.put("episodename", podcastItem.getTitle());
                 podcastItemJSONObject.put("shownotes", podcastItem.getDescription());
                 Date date = new Date(podcastItem.getPubDate());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                podcastItemJSONObject.put("pubdate", simpleDateFormat.format(date));//此处date用于前端展示
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E" , Locale.CHINA);
+                podcastItemJSONObject.put("pubdate",simpleDateFormat.format(date));//此处date用于前端展示
                 podcastItemJSONObject.put("season", podcastItem.getSeason());
                 podcastItemJSONObject.put("episode", podcastItem.getEpisode());
                 podcastItemJSONObject.put("type", podcastItem.getEpisodeType());

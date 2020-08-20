@@ -16,6 +16,10 @@ public class PastCases implements Serializable {
     private String podcastid;
     private String type;
     private PodcastInfo podcastInfo;
+    private String name;
+    private String logo;
+    private String link;
+    private String feedname;
 
     public int getId() {
         return id;
@@ -65,4 +69,35 @@ public class PastCases implements Serializable {
         this.podcastInfo = podcastInfo;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getFeedname() {
+        return feedname;
+    }
+
+    public void setFeedname(String feedname) {
+        this.feedname = feedname;
+    }
 }

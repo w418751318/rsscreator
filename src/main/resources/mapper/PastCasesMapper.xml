@@ -3,34 +3,29 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leftorright.rsscreator.dao.PastCasesMapper">
     <insert id="savePastCases" parameterType="com.leftorright.rsscreator.entity.PastCases">
-        insert into past_cases(createdate,podcastid,type)
-        VALUES (sysdate(),#{podcastid},#{type})
+        insert into past_cases(createdate,podcastid,type,name,logo,link)
+        VALUES (sysdate(),#{podcastid},#{type},#{name},#{logo},#{link})
     </insert>
 
     <delete id="deletePastCases" parameterType="int">
         delete from past_cases where id = #{id}
     </delete>
-    <select id="getAllPastCases" parameterType="com.leftorright.rsscreator.entity.PageBean" resultMap="pastmap">
-        select  id,createdate,podcastid,type,updatedate
-        from  past_cases
+    <select id="getAllPastCases" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.PastCases">
+        select a.* from
+        (select pc.*,pc.podcastid feedname
+        from past_cases pc where pc.type = '2'
+        UNION
+        select pc.id,pc.createdate,pc.updatedate,pc.podcastid,pc.type,tp.podcastname name,
+        IFNULL( if(length(trim(bs.banner))>0,bs.banner,null),tp.image)logo,
+        tp.link,tp.feedname
+        from past_cases pc,tb_podcast tp LEFT JOIN blog_show bs on tp.id = bs.podcastid where pc.podcastid = tp.id and pc.type = '1') a
         <if test="type != null ">
             where type = #{type}
         </if>
+        ORDER BY createdate desc
         <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
     </select>
-    <resultMap id="pastmap" type="com.leftorright.rsscreator.entity.PastCases">
-         <id column="id" property="id"/>
-         <result  property="podcastid" column="podcastid"/>
-         <association property="podcastInfo"  column="podcastid"  select="getPodInfo"/>
-    </resultMap>
-
-    <select id="getPodInfo" resultType="com.leftorright.rsscreator.entity.PodcastInfo">
-        select   id,podcastname,subtitle,link ,description,author,
-        (select banner from blog_show bs where bs.podcastid = tp.id limit 1) image ,email,feedname, keywords,firstcategorycode ,
-          secondcategorycode
-        from   tb_podcast tp
-        where id =#{podcastid}
-    </select>
+    
 
     <select id="getAllCount" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="int">
         select  count(id)

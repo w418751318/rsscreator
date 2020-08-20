@@ -35,6 +35,7 @@
     <select id="getAllCommon" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.Common">
         select  id,title,content,recruittime,publishtime,createdate,updatedate,type
         from  common where type = #{type}
+        order by createdate desc,updatedate desc
         <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
     </select>
 

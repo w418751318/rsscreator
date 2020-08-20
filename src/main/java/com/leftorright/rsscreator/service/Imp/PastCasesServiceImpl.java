@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
 public class PastCasesServiceImpl implements PastCasesService {
@@ -30,10 +31,7 @@ public class PastCasesServiceImpl implements PastCasesService {
         try {
             String type = pastCases.getType();
             if(type.equals("2")){
-                PodcastInfo podcastInfo = pastCases.getPodcastInfo();
-                FileUtils.setFileUrl(podcastInfo);
-                PodcastInfo save = podcastInfoRepository.save(pastCases.getPodcastInfo());
-                pastCases.setPodcastid(String.valueOf(save.getId()));
+                FileUtils.setFileUrl(pastCases);
             }
             pastCasesMapper.savePastCases(pastCases);
             result.setCode(0);
