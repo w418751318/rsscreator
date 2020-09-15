@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leftorright.rsscreator.dao.CommonMapper">
     <insert id="saveCommon" parameterType="com.leftorright.rsscreator.entity.Common">
-        insert into common (title,content,recruittime,publishtime,createdate,type)
-        VALUES (#{title},#{content},#{recruittime},#{publishtime},sysdate(),#{type})
+        insert into common (title,content,recruittime,publishtime,createdate,type,publish)
+        VALUES (#{title},#{content},#{recruittime},#{publishtime},sysdate(),#{type},#{publish})
     </insert>
     <update id="updateCommon" parameterType="com.leftorright.rsscreator.entity.Common">
         update common
@@ -33,14 +33,26 @@
         delete from common where id = #{id}
     </delete>
     <select id="getAllCommon" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="com.leftorright.rsscreator.entity.Common">
-        select  id,title,content,recruittime,publishtime,createdate,updatedate,type
-        from  common where type = #{type}
-        order by createdate desc,updatedate desc
+        select  id,title,content,recruittime,publishtime,createdate,updatedate,type,publish
+        from  common
+        where type = #{type}
+        <if test="publish != null and publish != ''">
+            and publish = #{publish}
+        </if>
+        order by publishtime desc,createdate desc,updatedate desc
         <if test=" offset != null  and limit != null">limit #{offset} ,#{limit}</if>
     </select>
 
     <select id="getAllCommonCount" parameterType="com.leftorright.rsscreator.entity.PageBean" resultType="int">
         select  count(id)
         from  common where type = #{type}
+        <if test="publish != null and publish != ''">
+            and publish = #{publish}
+        </if>
     </select>
+
+    <update id="updatePublish" parameterType="com.leftorright.rsscreator.entity.Common">
+        update common set publish = #{publish},publishtime = #{publishtime}
+        where id = #{id}
+    </update>
 </mapper>

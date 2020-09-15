@@ -36,6 +36,11 @@ public class CommonController {
         return commonService.getCommonByType(pageBean);
     }
 
+    @RequestMapping(value = "publish",method = RequestMethod.POST)
+    public Result publishCommon(@RequestBody Common common){
+        return commonService.updatePublish(common);
+    }
+
 
     @RequestMapping(value = "/ueditor/exec")
     @ResponseBody

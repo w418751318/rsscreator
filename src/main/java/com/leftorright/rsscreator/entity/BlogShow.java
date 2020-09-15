@@ -22,7 +22,8 @@ public class BlogShow implements Serializable {
     //收听渠道
     private List<Channel> channelList;
     private String channelIdList;
-    
+
+    private String anchorName;
     private String anchordesc;
     private String link;
     private String name;
@@ -203,6 +204,13 @@ public class BlogShow implements Serializable {
         this.banner = banner;
     }
 
+    public String getAnchorName() {
+        return anchorName;
+    }
+
+    public void setAnchorName(String anchorName) {
+        this.anchorName = anchorName;
+    }
 }
 
 

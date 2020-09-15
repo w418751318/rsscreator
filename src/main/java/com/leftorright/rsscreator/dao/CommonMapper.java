@@ -21,4 +21,5 @@ public interface CommonMapper {
 
     int getAllCommonCount(PageBean pageBean);
 
+    int updatePublish(Common common);
 }

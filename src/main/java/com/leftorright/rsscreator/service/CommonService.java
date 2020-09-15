@@ -12,4 +12,5 @@ public interface CommonService {
 
     public Result getCommonByType(PageBean pageBean);
 
+    public Result updatePublish(Common common);
 }

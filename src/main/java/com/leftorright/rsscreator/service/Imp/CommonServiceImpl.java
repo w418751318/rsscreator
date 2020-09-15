@@ -8,14 +8,15 @@ import com.leftorright.rsscreator.entity.PageBean;
 import com.leftorright.rsscreator.entity.Result;
 import com.leftorright.rsscreator.service.CommonService;
 import com.leftorright.rsscreator.utils.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class CommonServiceImpl implements CommonService {
@@ -28,6 +29,9 @@ public class CommonServiceImpl implements CommonService {
     public Result saveCommon(Common common) {
         Result result = new Result();
         try {
+            if(StringUtils.isBlank(common.getPublish())){
+                common.setPublish("0");
+            }
             if(common.getId() == null){
                 commonMapper.saveCommon(common);
             }else{
@@ -77,4 +81,23 @@ public class CommonServiceImpl implements CommonService {
         return result;
     }
 
+    @Override
+    public Result updatePublish(Common common) {
+        Result result = new Result();
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" , Locale.CHINA);
+            common.setPublishtime(simpleDateFormat.format(new Date()));
+            if(common.getPublish().equals("0")){
+                common.setPublishtime(null);
+            }
+            int i = commonMapper.updatePublish(common);
+            result.setCode(0);
+            result.setData("成功");
+        } catch (Exception e) {
+            logger.error("发布公共失败：",e);
+            result.setCode(1);
+            result.setData("失败");
+        }
+        return result;
+    }
 }

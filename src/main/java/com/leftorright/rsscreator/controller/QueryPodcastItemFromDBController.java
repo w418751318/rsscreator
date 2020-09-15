@@ -28,4 +28,9 @@ public class QueryPodcastItemFromDBController {
     public ServiceResponse queryPodcastItemFromDBByFeedname(@RequestParam("feedname") String feedname) {
         return queryPodcastFromDBService.queryPodcastItemsByFeedName(feedname);
     }
+
+    @RequestMapping(value = "/query", method = RequestMethod.GET)
+    public ServiceResponse queryPodcastItemById(@RequestParam("id") Integer id) {
+        return queryPodcastFromDBService.queryPodcastItemsById(id);
+    }
 }

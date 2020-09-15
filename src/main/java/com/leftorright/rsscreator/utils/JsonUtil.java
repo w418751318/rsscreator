@@ -88,6 +88,10 @@ public class JsonUtil {
                 String isbanner = map.get("isbanner").toString();
                 pageBean.setIsbanner(isbanner);
             }
+            if(map.get("publish") != null){
+                String publish = map.get("publish").toString();
+                pageBean.setPublish(publish);
+            }
             if(map.get("key") != null){
                 String key = map.get("key").toString();
                 pageBean.setKey(key);

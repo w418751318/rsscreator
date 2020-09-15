@@ -12,4 +12,5 @@ public interface PodcastItemRepository extends CrudRepository<PodcastItem, Integ
 
     List<PodcastItem> findPodcastItemByPodcastname(String podcastname);
 
+    PodcastItem findPodcastItemById(Integer id);
 }

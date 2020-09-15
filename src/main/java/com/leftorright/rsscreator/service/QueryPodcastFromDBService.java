@@ -14,4 +14,6 @@ public interface QueryPodcastFromDBService {
     public ServiceResponse queryPodcastItems(String podcastName);
 
     public ServiceResponse queryPodcastItemsByFeedName(String feedname);
+
+    public ServiceResponse queryPodcastItemsById(Integer id);
 }

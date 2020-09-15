@@ -12,13 +12,13 @@ public class Common implements Serializable {
     private String content;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date recruittime;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date publishtime;
+    private String publishtime;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date createdate;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date updatetime;
     private String type;
+    private String publish;
 
     public Integer getId() {
         return id;
@@ -52,13 +52,7 @@ public class Common implements Serializable {
         this.recruittime = recruittime;
     }
 
-    public Date getPublishtime() {
-        return publishtime;
-    }
 
-    public void setPublishtime(Date publishtime) {
-        this.publishtime = publishtime;
-    }
 
     public Date getCreatedate() {
         return createdate;
@@ -84,4 +78,19 @@ public class Common implements Serializable {
         this.type = type;
     }
 
+    public String getPublish() {
+        return publish;
+    }
+
+    public void setPublish(String publish) {
+        this.publish = publish;
+    }
+
+    public String getPublishtime() {
+        return publishtime;
+    }
+
+    public void setPublishtime(String publishtime) {
+        this.publishtime = publishtime;
+    }
 }

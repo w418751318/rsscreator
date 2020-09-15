@@ -14,6 +14,7 @@ public class PageBean {
     private String isbanner;
     private String isshow;
     private String key;
+    private String publish;
 
 
     public Integer getOffset() {
@@ -95,5 +96,11 @@ public class PageBean {
                 '}';
     }
 
+    public String getPublish() {
+        return publish;
+    }
 
+    public void setPublish(String publish) {
+        this.publish = publish;
+    }
 }

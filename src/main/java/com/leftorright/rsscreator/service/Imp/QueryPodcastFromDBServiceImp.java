@@ -247,4 +247,28 @@ public class QueryPodcastFromDBServiceImp implements QueryPodcastFromDBService {
         serviceResponse.setRspData(podcastInfoJSONObject);
         return serviceResponse;
     }
+
+
+    @Override
+    public ServiceResponse queryPodcastItemsById(Integer id) {
+        PodcastItem podcastItem = podcastItemRepository.findPodcastItemById(id);
+        PodcastInfo podcastInfoByPodcastname = podcastInfoRepository.findPodcastInfoByPodcastname(podcastItem.getPodcastname());
+        JSONObject podcastItemJSONObject = new JSONObject();
+        podcastItemJSONObject.put("key", podcastItem.getId());
+        podcastItemJSONObject.put("episodename", podcastItem.getTitle());
+        podcastItemJSONObject.put("shownotes", podcastItem.getDescription());
+        Date date = new Date(podcastItem.getPubDate());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E" , Locale.CHINA);
+        podcastItemJSONObject.put("pubdate",simpleDateFormat.format(date));//此处date用于前端展示
+        podcastItemJSONObject.put("season", podcastItem.getSeason());
+        podcastItemJSONObject.put("episode", podcastItem.getEpisode());
+        podcastItemJSONObject.put("type", podcastItem.getEpisodeType());
+        podcastItemJSONObject.put("podcastname", podcastItem.getPodcastname());
+        podcastItemJSONObject.put("enclosureurl", podcastItem.getEnclosure_url());
+        podcastItemJSONObject.put("author", podcastItem.getAuthor());
+        podcastItemJSONObject.put("image", podcastInfoByPodcastname.getImage());
+
+        return jsonResult(ServiceConstant.STATUS_SUCCESS, ServiceConstant.MSG_SUCCESS_QUERY, "", "", null, podcastItemJSONObject, null);
+
+    }
 }
