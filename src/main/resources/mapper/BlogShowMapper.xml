@@ -4,7 +4,7 @@
 <mapper namespace="com.leftorright.rsscreator.dao.BlogShowMapper">
     <insert id="saveBlogShow" parameterType="com.leftorright.rsscreator.entity.BlogShow"  useGeneratedKeys="true" keyColumn="id" keyProperty="id" >
         insert into blog_show(type,webbanner,appbanner,isbanner,isshow,createdate,podcastid,anchorname,anchordesc,link,title,text,banner)
-        VALUES (#{type},#{webbanner},#{appbanner},#{isbanner},#{isshow},sysdate(),#{podcastid},,#{anchorName},#{anchordesc},#{link},#{title},#{text},#{banner})
+        VALUES (#{type},#{webbanner},#{appbanner},#{isbanner},#{isshow},sysdate(),#{podcastid},#{anchorName},#{anchordesc},#{link},#{title},#{text},#{banner})
 
     </insert>
     <insert id="savePodcast" parameterType="com.leftorright.rsscreator.entity.PodcastItem" useGeneratedKeys="true" keyColumn="id" keyProperty="id" >
